@@ -6,12 +6,16 @@ import {
   View,
   RefreshControl,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function Home() {
   // const [isLiked, setIsLiked] = useState('heart-outline');
   const [isLoading, setIsLoading] = useState(false);
+  const [listData, setListData] = useState([]);
+
+  useEffect(() => {}, []);
+
   function FeedItemHandler({item}) {
     let isLiked = 'heart-outline';
     return (

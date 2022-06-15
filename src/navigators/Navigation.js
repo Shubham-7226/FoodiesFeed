@@ -7,8 +7,8 @@ import MainStack from './MainStack';
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <MainStack />
-      {/* <AuthStack /> */}
+      {/* <MainStack /> */}
+      <AuthStack />
     </NavigationContainer>
   );
 }
