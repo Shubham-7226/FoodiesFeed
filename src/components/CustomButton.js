@@ -1,15 +1,22 @@
 import {StyleSheet, Text, View, Pressable} from 'react-native';
 import React from 'react';
 
-export default function CustomButton({title, onPress}) {
+export default function CustomButton({
+  title,
+  onPress,
+  customStyle,
+  customBackgroundColor,
+  customTextStyle,
+}) {
   return (
     <Pressable
       onPress={onPress}
       style={({pressed}) => [
         styles.buttonStyle,
-        {backgroundColor: pressed ? 'grey' : '#0066ff'},
+        {backgroundColor: pressed ? 'grey' : customBackgroundColor},
+        customStyle,
       ]}>
-      <Text style={styles.textStyle}>{title}</Text>
+      <Text style={[styles.textStyle, customTextStyle]}>{title}</Text>
     </Pressable>
   );
 }

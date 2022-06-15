@@ -20,3 +20,14 @@ export default function MainStack() {
     </Tab.Navigator>
   );
 }
+
+// const Stack = createNativeStackNavigator();
+
+// export function PostStack() {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen name="AddPost" component={AddPost} />
+//       <Stack.Screen name="HomeFeed" component={Home} />
+//     </Stack.Navigator>
+//   );
+// }

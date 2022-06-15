@@ -7,7 +7,8 @@ export default function CustomTextInput({
   placeholder,
   onChangeText,
   secureTextEntry,
-  props,
+  numberOfLines,
+  customStyle,
 }) {
   return (
     <View style={styles.container}>
@@ -19,8 +20,8 @@ export default function CustomTextInput({
         placeholder={placeholder}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
-        style={styles.input}
-        {...props}
+        numberOfLines={numberOfLines}
+        style={[styles.input, customStyle]}
       />
     </View>
   );

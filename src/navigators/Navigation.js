@@ -8,6 +8,7 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <MainStack />
+      {/* <AuthStack /> */}
     </NavigationContainer>
   );
 }
