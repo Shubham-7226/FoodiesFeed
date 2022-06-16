@@ -5,12 +5,13 @@ import CustomButton from '../../components/CustomButton';
 import CustomTextInput from '../../components/CustomTextInput';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import {registerUser} from '../../store/actions';
-import LOGIN from '../../utils/url';
+import {loginUser} from '../../store/actions';
+import {LOGIN} from '../../utils/url';
 
 export default function Login({navigation}) {
+  // const userDetail = useSelector(state => state.user);
+  // console.log('in Login After userSelector', userDetail);
   const dispatch = useDispatch();
-
   const [input, setInput] = useState({
     email: '',
     password: '',
@@ -18,6 +19,7 @@ export default function Login({navigation}) {
   const [userToken, setUserToken] = useState();
 
   //console.log(registerd);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const inputHandler = (inputidentifier, enteredData) => {
     setInput(input => {
@@ -34,30 +36,39 @@ export default function Login({navigation}) {
   const onLogin = () => {
     if (input.email === '' || input.password === '') {
       alert('Please enter all the details');
-      return;
     }
+    const {email, password} = input;
     console.log(input);
-    setUserToken(123456);
-    // axios
-    //   .post(LOGIN, {
-    //     input,
-    //   })
-    //   .then(res => {console.log(res); setUserToken(res)})
-    //   .catch(err => console.log(err));
-    // if (email == '' || password == '') {
-    //   alert('Please enter email and password');
-    //   return;
-    // }
-    dispatch(registerUser({input, userToken}));
-    navigation.navigate('Signup');
+    // setUserToken(123456);
+    // console.log(LOGIN);
+    axios
+      .post(LOGIN, {
+        userName: email,
+        password: password,
+      })
+      .then(res => {
+        console.log('this is token', res.data.data.authenticate);
+        // setUserToken(res.data.data.authenticate);
+        setErrorMessage('');
+        let userToken = res.data.data.authenticate;
+        console.log('user token before dispatch', userToken);
+        dispatch(loginUser({input, userToken}));
+        // navigation.navigate('Login');
+      })
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+        setErrorMessage(err.response.data.errorMessage);
+      });
+    // navigation.navigate('Signup');
   };
+
   return (
     <View style={styles.container}>
       <CustomTextInput
         label="Email"
         placeholder="Email"
         onChangeText={inputHandler.bind(this, 'email')}
-        value={input.email}
+        // value={input.email}
       />
       <CustomTextInput
         label="Password"
@@ -66,6 +77,7 @@ export default function Login({navigation}) {
         onChangeText={inputHandler.bind(this, 'password')}
         // value={input.password}
       />
+      <Text style={styles.errorMessageStyle}>{errorMessage}</Text>
 
       <CustomButton
         title="Login"
@@ -101,5 +113,9 @@ const styles = StyleSheet.create({
   registerText: {
     marginLeft: 6,
     color: 'blue',
+  },
+  errorMessageStyle: {
+    color: 'red',
+    paddingVertical: 5,
   },
 });

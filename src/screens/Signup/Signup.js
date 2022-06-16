@@ -1,10 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
 import {registerUser} from '../../store/actions';
 import {useSelector, useDispatch} from 'react-redux';
+
+import {REGISTER} from '../../utils/url';
 
 export default function Signup({navigation}) {
   const [input, setInput] = useState({
@@ -14,10 +16,13 @@ export default function Signup({navigation}) {
     dob: '',
     password: '',
   });
+  // const [userToken, setUserToken] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
   // const userDetail = useSelector(state => state.user);
   // console.log('After userSelector', userDetail);
   //console.log(registerd);
-
+  const dispatch = useDispatch();
   const inputHandler = (inputidentifier, enteredData) => {
     setInput(input => {
       return {
@@ -27,68 +32,79 @@ export default function Signup({navigation}) {
     });
   };
 
-  // const [username, setUserName] = useState();
-  // const [email, setEmail] = useState();
-  // const [password, setPassword] = useState();
-
-  // const {username, email, password, isSecure} = state;
-  // const updateState = data => setState(() => ({...state, ...data}));
-
   const onSignup = () => {
-    // if (username === '' || email === '' || password === '') {
-    //   alert('Please enter all the details');
-    //   return;
-    // }
-    // axios
-    //   .post(`${API_URL}/register`, {
-    //     user,
-    //   })
-    //   .then(res => console.log(res))
-    //   .catch(err => console.log(err));
+    console.log('this is input in signUp', input);
+    if (
+      input.username === '' ||
+      input.email === '' ||
+      input.password === '' ||
+      input.name === '' ||
+      input.dob === ''
+    ) {
+      alert('Please enter all the details');
+    }
+    const {username, password, email, name, dob} = input;
 
-    navigation.navigate('Login');
+    axios
+      .post(REGISTER, {
+        userName: username,
+        password: password,
+        email: email,
+        name: name,
+        dob: dob,
+      })
+      .then(res => {
+        console.log('this is token', res.data.data.authenticate);
+        // setUserToken(res.data.data.authenticate);
+        setErrorMessage('');
+        let userToken = res.data.data.authenticate;
+        console.log('user token before dispatch', userToken);
+        dispatch(registerUser({input, userToken}));
+        // navigation.navigate('Login');
+      })
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+        setErrorMessage(err.response.data.errorMessage);
+      });
   };
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          flex: 1,
-          backgroundColor: 'transparent',
-        },
-      ]}>
-      <CustomTextInput
-        label="Username"
-        placeholder="Username"
-        onChangeText={() => inputHandler.bind(this, 'username')}
-      />
-      <CustomTextInput
-        label="Name"
-        placeholder="Username"
-        onChangeText={() => inputHandler.bind(this, 'name')}
-      />
-      <CustomTextInput
-        label="Email"
-        placeholder="Email"
-        onChangeText={() => inputHandler.bind(this, 'email')}
-      />
-      <CustomTextInput
-        label="DOB"
-        placeholder="DOB"
-        onChangeText={() => inputHandler.bind(this, 'dob')}
-      />
-      <CustomTextInput
-        label="Password"
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={() => inputHandler.bind(this, 'password')}
-      />
+    <View style={[styles.container]}>
+      <ScrollView style={styles.scrollViewSignup}>
+        <Text style={styles.errorMessageStyle}>{errorMessage}</Text>
 
-      <CustomButton
-        title="SIGNUP"
-        onPress={onSignup}
-        customBackgroundColor="#0066ff"
-      />
+        <CustomTextInput
+          label="Username"
+          placeholder="Username"
+          onChangeText={inputHandler.bind(this, 'username')}
+        />
+        <CustomTextInput
+          label="Name"
+          placeholder="Username"
+          onChangeText={inputHandler.bind(this, 'name')}
+        />
+        <CustomTextInput
+          label="Email"
+          placeholder="Email"
+          onChangeText={inputHandler.bind(this, 'email')}
+        />
+        <CustomTextInput
+          label="DOB"
+          placeholder="DD/MM/YYYY"
+          onChangeText={inputHandler.bind(this, 'dob')}
+        />
+        <CustomTextInput
+          label="Password"
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={inputHandler.bind(this, 'password')}
+        />
+
+        <CustomButton
+          title="SIGNUP"
+          onPress={onSignup}
+          customBackgroundColor="#0066ff"
+        />
+      </ScrollView>
     </View>
   );
 }
@@ -99,6 +115,16 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: 'white',
     justifyContent: 'center',
+    // backgroundColor: 'white',
     // borderWidth: 1,
+  },
+  errorMessageStyle: {
+    color: 'red',
+    paddingVertical: 5,
+  },
+  scrollViewSignup: {
+    // height: 300,
+    marginTop: 50,
+    backgroundColor: 'white',
   },
 });

@@ -17,20 +17,31 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER_LOGIN:
-      const {user} = state;
+      // const {user} = state;
       console.log(action);
       return {
-        ...user,
+        ...state.user,
         email: action.payload.email,
+        token: action.token,
+      };
+
+    case SET_USER_REGISTER:
+      // const {user} = state;
+      console.log('in reducer', action);
+      return {
+        ...state.user,
+        email: action.payload.email,
+        name: action.payload.name,
+        userName: action.payload.username,
         token: action.token,
       };
 
     case SET_USER_LOG_OUT:
       return {
+        email: null,
+        name: null,
         userName: null,
-        userEmail: null,
-        userToken: null,
-        registerd: false,
+        token: null,
       };
 
     default:

@@ -6,6 +6,7 @@ import SearchUser from '../screens/SearchUser/SearchUser';
 import AddPost from '../screens/AddPost/AddPost';
 import ChatUser from '../screens/Chat/ChatUser';
 import Profile from '../screens/Profile/Profile';
+// import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
 
 const Tab = createBottomTabNavigator();
 
