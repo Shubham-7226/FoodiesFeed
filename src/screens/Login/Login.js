@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import CustomButton from '../../components/CustomButton';
@@ -7,16 +7,19 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {loginUser} from '../../store/actions';
 import {LOGIN} from '../../utils/url';
+import COLORS from '../../constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login({navigation}) {
-  // const userDetail = useSelector(state => state.user);
+  const userDetail = useSelector(state => state.user);
   // console.log('in Login After userSelector', userDetail);
+
   const dispatch = useDispatch();
   const [input, setInput] = useState({
     email: '',
     password: '',
   });
-  const [userToken, setUserToken] = useState();
+  // const [userToken, setUserToken] = useState();
 
   //console.log(registerd);
   const [errorMessage, setErrorMessage] = useState('');
@@ -33,7 +36,17 @@ export default function Login({navigation}) {
   function registerLinkHandler() {
     navigation.navigate('Signup');
   }
-  const onLogin = () => {
+
+  // const saveData = async token => {
+  //   try {
+  //     await AsyncStorage.setItem('token', token);
+  //     alert('Data successfully saved');
+  //   } catch (e) {
+  //     alert('Failed to save the data to the storage');
+  //   }
+  // };
+
+  const onLogin = async () => {
     if (input.email === '' || input.password === '') {
       alert('Please enter all the details');
     }
@@ -41,7 +54,7 @@ export default function Login({navigation}) {
     console.log(input);
     // setUserToken(123456);
     // console.log(LOGIN);
-    axios
+    await axios
       .post(LOGIN, {
         userName: email,
         password: password,
@@ -52,6 +65,10 @@ export default function Login({navigation}) {
         setErrorMessage('');
         let userToken = res.data.data.authenticate;
         console.log('user token before dispatch', userToken);
+        // AsyncStorage.setItem('token', JSON.stringify(userToken));
+        // const token = await AsyncStorage.getItem('token');
+
+        // console.log('in navigation', JSON.parse(token));
         dispatch(loginUser({input, userToken}));
         // navigation.navigate('Login');
       })
@@ -59,6 +76,9 @@ export default function Login({navigation}) {
         console.log(err.response.data.errorMessage);
         setErrorMessage(err.response.data.errorMessage);
       });
+    // if (userToken !== null) {
+    //   saveData(userToken);
+    // }
     // navigation.navigate('Signup');
   };
 
@@ -82,7 +102,7 @@ export default function Login({navigation}) {
       <CustomButton
         title="Login"
         onPress={onLogin}
-        customBackgroundColor="#0066ff"
+        customBackgroundColor={COLORS.primary}
       />
       <View style={styles.registerTextContainer}>
         <Text style={styles.accountLabel}>Don't have account?</Text>
@@ -112,7 +132,7 @@ const styles = StyleSheet.create({
   accountLabel: {},
   registerText: {
     marginLeft: 6,
-    color: 'blue',
+    color: COLORS.primary,
   },
   errorMessageStyle: {
     color: 'red',

@@ -6,29 +6,66 @@ import SearchUser from '../screens/SearchUser/SearchUser';
 import AddPost from '../screens/AddPost/AddPost';
 import ChatUser from '../screens/Chat/ChatUser';
 import Profile from '../screens/Profile/Profile';
+import Ionic from 'react-native-vector-icons/Ionicons';
+import COLORS from '../constants/colors';
+import Status from '../components/Status';
 // import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
+function MainStack() {
+  const Tab = createBottomTabNavigator();
 
-const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
 
-export default function MainStack() {
+  function BottomTabScreen() {
+    return (
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarStyle: {
+            height: 50,
+          },
+          tabBarIcon: ({focused, size, color}) => {
+            let iconName;
+            if (route.name === 'HomeFeed') {
+              iconName = focused ? 'home-sharp' : 'home-outline';
+              size = focused ? size + 8 : size + 2;
+            } else if (route.name === 'SearchUser') {
+              iconName = focused ? 'search' : 'search-sharp';
+              size = focused ? size + 8 : size + 2;
+            } else if (route.name === 'AddPost') {
+              iconName = focused ? 'add-circle-sharp' : 'add-circle-outline';
+              size = focused ? size + 26 : size + 25;
+            } else if (route.name === 'ChatUser') {
+              iconName = focused ? 'fast-food-sharp' : 'fast-food-outline';
+              size = focused ? size + 8 : size + 2;
+            } else if (route.name === 'Profile') {
+              iconName = focused ? 'ios-person-circle' : 'ios-person-outline';
+              size = focused ? size + 8 : size + 2;
+            }
+
+            return <Ionic name={iconName} size={size} color={COLORS.primary} />;
+          },
+        })}>
+        <Tab.Screen name="HomeFeed" component={Home} />
+        <Tab.Screen name="SearchUser" component={SearchUser} />
+        <Tab.Screen name="AddPost" component={AddPost} />
+        <Tab.Screen name="ChatUser" component={ChatUser} />
+        <Tab.Screen name="Profile" component={Profile} />
+      </Tab.Navigator>
+    );
+  }
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="SearchUser" component={SearchUser} />
-      <Tab.Screen name="AddPost" component={AddPost} />
-      <Tab.Screen name="ChatUser" component={ChatUser} />
-      <Tab.Screen name="Profile" component={Profile} />
-    </Tab.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Home" component={BottomTabScreen} />
+      <Stack.Screen name="Status" component={Status} />
+      {/* <Stack.Screen name="FriendProfile" component={FriendProfile} /> */}
+      {/* <Stack.Screen name="EditProfile" component={EditProfile} /> */}
+    </Stack.Navigator>
   );
 }
 
-// const Stack = createNativeStackNavigator();
-
-// export function PostStack() {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen name="AddPost" component={AddPost} />
-//       <Stack.Screen name="HomeFeed" component={Home} />
-//     </Stack.Navigator>
-//   );
-// }
+export default MainStack;

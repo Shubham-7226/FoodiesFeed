@@ -16,7 +16,7 @@ import CustomTextInput from '../../components/CustomTextInput';
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import COLORS from '../../constants/colors';
 export default function AddPost({navigation}) {
   const [description, setDescription] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
@@ -147,19 +147,19 @@ export default function AddPost({navigation}) {
           /> */}
           <CustomButton
             title="Take Photo"
-            customBackgroundColor="#0066ff"
+            customBackgroundColor={COLORS.primary}
             customStyle={{margin: 12}}
             onPress={photoFromCameraHandler}
           />
           <CustomButton
             title="Choose From Gallery"
-            customBackgroundColor="#0066ff"
+            customBackgroundColor={COLORS.primary}
             customStyle={{margin: 12}}
             onPress={photoFromGalleryHandler}
           />
           <CustomButton
             title="Cancel"
-            customBackgroundColor="#0066ff"
+            customBackgroundColor={COLORS.primary}
             customStyle={{margin: 12}}
             onPress={() => {
               setModalVisible(false);
@@ -169,7 +169,7 @@ export default function AddPost({navigation}) {
       </Modal>
       <CustomButton
         title="POST"
-        customBackgroundColor="#0066ff"
+        customBackgroundColor={COLORS.primary}
         customStyle={{margin: 12}}
         onPress={postButtonHandler}
       />
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 10,
   },
   imagePostStyle: {
-    height: 200,
+    height: 300,
     alignItems: 'flex-end',
   },
   activityIndicatorStyle: {

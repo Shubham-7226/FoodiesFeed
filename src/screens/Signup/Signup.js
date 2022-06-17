@@ -5,6 +5,8 @@ import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
 import {registerUser} from '../../store/actions';
 import {useSelector, useDispatch} from 'react-redux';
+import COLORS from '../../constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {REGISTER} from '../../utils/url';
 
@@ -32,7 +34,7 @@ export default function Signup({navigation}) {
     });
   };
 
-  const onSignup = () => {
+  const onSignup = async () => {
     console.log('this is input in signUp', input);
     if (
       input.username === '' ||
@@ -45,7 +47,7 @@ export default function Signup({navigation}) {
     }
     const {username, password, email, name, dob} = input;
 
-    axios
+    await axios
       .post(REGISTER, {
         userName: username,
         password: password,
@@ -66,6 +68,7 @@ export default function Signup({navigation}) {
         console.log(err.response.data.errorMessage);
         setErrorMessage(err.response.data.errorMessage);
       });
+    // await AsyncStorage.setItem('token', userToken);
   };
   return (
     <View style={[styles.container]}>
@@ -102,7 +105,7 @@ export default function Signup({navigation}) {
         <CustomButton
           title="SIGNUP"
           onPress={onSignup}
-          customBackgroundColor="#0066ff"
+          customBackgroundColor={COLORS.primary}
         />
       </ScrollView>
     </View>

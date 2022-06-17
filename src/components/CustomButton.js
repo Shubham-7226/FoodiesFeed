@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, Pressable} from 'react-native';
 import React from 'react';
+import COLORS from '../constants/colors';
 
 export default function CustomButton({
   title,
@@ -23,7 +24,7 @@ export default function CustomButton({
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    backgroundColor: '#0066ff',
+    backgroundColor: 'COLORS.primary',
     height: 48,
     // borderWidth: 1,
     justifyContent: 'center',
