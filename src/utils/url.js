@@ -6,4 +6,6 @@ export const LOGOUT = `${API_URL}/logout`;
 export const LOGIN = `${API_URL}/login`;
 export const UPDATE_PROFILE = `${API_URL}/user`;
 export const UPLOAD_IMAGE = `${API_URL}/user/upload`;
-export const FORGOT_PASSWORD = `${API_URL}/auth/recover`;
+export const CREATE_POST = `${API_URL}/posts`;
+export const FORGOT_PASSWORD = `${API_URL}/forgot-password`;
+export const CHANGE_PASSWORD = `${API_URL}/change-password`;

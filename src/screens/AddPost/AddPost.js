@@ -12,16 +12,34 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton from '../../components/CustomButton';
-import CustomTextInput from '../../components/CustomTextInput';
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modal';
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../constants/colors';
+import CheckBox from '@react-native-community/checkbox';
+import {CREATE_POST} from '../../utils/url';
+import {useSelector, useDispatch} from 'react-redux';
+import FormData from 'form-data';
+
 export default function AddPost({navigation}) {
-  const [description, setDescription] = useState('');
+  const [caption, setCaption] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+  const dispatch = useDispatch();
+  let token = useSelector(state => state.user.token);
+  // console.log('in add post', token);
+  let data = new FormData();
+  data.append('postImage', {
+    name: image.modificationDate,
+    type: image.mime,
+    uri: image.path,
+  });
+  data.append('caption', caption);
+  data.append('commentOff', !toggleCheckBox);
 
   function photoFromCameraHandler() {
     setModalVisible(!isModalVisible);
@@ -29,12 +47,12 @@ export default function AddPost({navigation}) {
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       cropping: true,
-      compressImageQuality: 0.7,
+      compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
-          setImage(response.path);
-          console.log('this is image', image);
+          console.log('this is image', response);
+          setImage(response);
         }
       })
       .catch(err => {
@@ -48,12 +66,12 @@ export default function AddPost({navigation}) {
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       cropping: true,
-      compressImageQuality: 0.7,
+      compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
-          setImage(response.path);
-          console.log('this is image' + image);
+          console.log('this is image' + response);
+          setImage(response);
         }
       })
       .catch(err => {
@@ -67,23 +85,36 @@ export default function AddPost({navigation}) {
     setModalVisible(!isModalVisible);
   }
 
-  function postButtonHandler() {
-    const uploadObject = {
-      name: 'username',
-      ProfileImage: 'url of userimage',
-      text: 'caption text',
-      image: image,
-    };
+  async function postButtonHandler() {
     setIsLoading(true);
-    //upload functionallity
+    console.log('this is form data', data);
+    await axios
+      .post(CREATE_POST, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(res => {
+        console.log('response while adding post', res.data.data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log(
+          'this is error message while posting data',
+          err.response.data,
+        );
+        setIsLoading(false);
+      });
+    setIsLoading(false);
+
     if (image == '') {
       Alert.alert('Upload Image', 'Please upload image', [
         {text: 'OK', onPress: () => console.log('OK Pressed')},
       ]);
     } else {
     }
-    setIsLoading(false);
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
   }
 
   return (
@@ -105,7 +136,9 @@ export default function AddPost({navigation}) {
         />
       ) : (
         <Pressable>
-          <ImageBackground style={styles.imagePostStyle} source={{uri: image}}>
+          <ImageBackground
+            style={styles.imagePostStyle}
+            source={{uri: image.path}}>
             <Icon
               name="close"
               size={30}
@@ -118,15 +151,51 @@ export default function AddPost({navigation}) {
           </ImageBackground>
         </Pressable>
       )}
-      <TextInput
+      <View
         style={{
-          textAlignVertical: 'top',
-          //  backgroundColor: 'red'
-        }}
-        numberOfLines={5}
-        placeholder="Add feed text here..."
-      />
+          flexDirection: 'row',
+          // padding: 10,
+          borderWidth: 1,
+          borderColor: '#CDCDCD',
+          elevation: 3,
+        }}>
+        <Text
+          style={{
+            fontSize: 16,
 
+            marginTop: 8,
+            // backgroundColor: 'red',
+          }}>
+          Captions:
+        </Text>
+
+        <TextInput
+          style={{
+            textAlignVertical: 'top',
+            marginLeft: 8,
+            // backgroundColor: 'red',
+            width: '80%',
+            fontSize: 16,
+            // borderWidth: 1,
+            // borderColor: '#CDCDCD',
+          }}
+          multiline={true}
+          numberOfLines={5}
+          placeholder="Add feed text here..."
+          value={caption}
+          onChangeText={text => {
+            setCaption(text);
+          }}
+        />
+      </View>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <CheckBox
+          disabled={false}
+          value={toggleCheckBox}
+          onValueChange={newValue => setToggleCheckBox(newValue)}
+        />
+        <Text>Comment disabled</Text>
+      </View>
       <Modal
         animationType="slide"
         transparent={true}

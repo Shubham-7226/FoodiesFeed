@@ -1,4 +1,10 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton from '../../components/CustomButton';
@@ -7,7 +13,6 @@ import {registerUser} from '../../store/actions';
 import {useSelector, useDispatch} from 'react-redux';
 import COLORS from '../../constants/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {REGISTER} from '../../utils/url';
 
 export default function Signup({navigation}) {
@@ -20,6 +25,7 @@ export default function Signup({navigation}) {
   });
   // const [userToken, setUserToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // const userDetail = useSelector(state => state.user);
   // console.log('After userSelector', userDetail);
@@ -46,7 +52,7 @@ export default function Signup({navigation}) {
       alert('Please enter all the details');
     }
     const {username, password, email, name, dob} = input;
-
+    setIsLoading(true);
     await axios
       .post(REGISTER, {
         userName: username,
@@ -63,16 +69,28 @@ export default function Signup({navigation}) {
         console.log('user token before dispatch', userToken);
         dispatch(registerUser({input, userToken}));
         // navigation.navigate('Login');
+        setIsLoading(false);
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);
         setErrorMessage(err.response.data.errorMessage);
+        setIsLoading(false);
       });
+
     // await AsyncStorage.setItem('token', userToken);
   };
   return (
     <View style={[styles.container]}>
       <ScrollView style={styles.scrollViewSignup}>
+        <View
+          style={{
+            position: 'absolute',
+            top: '45%',
+            left: '45%',
+            // backgroundColor: 'red',
+          }}>
+          {isLoading ? <ActivityIndicator size="large" color="orange" /> : null}
+        </View>
         <Text style={styles.errorMessageStyle}>{errorMessage}</Text>
 
         <CustomTextInput
@@ -127,7 +145,8 @@ const styles = StyleSheet.create({
   },
   scrollViewSignup: {
     // height: 300,
-    marginTop: 50,
+    // paddingVertical: 40,
+    marginVertical: 25,
     backgroundColor: 'white',
   },
 });

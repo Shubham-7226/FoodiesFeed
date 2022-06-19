@@ -9,6 +9,10 @@ import Profile from '../screens/Profile/Profile';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import COLORS from '../constants/colors';
 import Status from '../components/Status';
+import EditProfile from '../components/EditProfile';
+import DisplayImage from '../components/DisplayImage';
+import SearchContent from '../components/SearchContent';
+import ChangePassword from '../screens/ChangePassword/ChangePassword';
 // import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
 function MainStack() {
   const Tab = createBottomTabNavigator();
@@ -30,7 +34,7 @@ function MainStack() {
             if (route.name === 'HomeFeed') {
               iconName = focused ? 'home-sharp' : 'home-outline';
               size = focused ? size + 8 : size + 2;
-            } else if (route.name === 'SearchUser') {
+            } else if (route.name === 'SearchUserStack') {
               iconName = focused ? 'search' : 'search-sharp';
               size = focused ? size + 8 : size + 2;
             } else if (route.name === 'AddPost') {
@@ -39,7 +43,7 @@ function MainStack() {
             } else if (route.name === 'ChatUser') {
               iconName = focused ? 'fast-food-sharp' : 'fast-food-outline';
               size = focused ? size + 8 : size + 2;
-            } else if (route.name === 'Profile') {
+            } else if (route.name === 'ProfileStack') {
               iconName = focused ? 'ios-person-circle' : 'ios-person-outline';
               size = focused ? size + 8 : size + 2;
             }
@@ -48,13 +52,43 @@ function MainStack() {
           },
         })}>
         <Tab.Screen name="HomeFeed" component={Home} />
-        <Tab.Screen name="SearchUser" component={SearchUser} />
+        <Tab.Screen name="SearchUserStack" component={SearchUserStack} />
         <Tab.Screen name="AddPost" component={AddPost} />
         <Tab.Screen name="ChatUser" component={ChatUser} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="ProfileStack" component={ProfileStack} />
       </Tab.Navigator>
     );
   }
+  function ProfileStack() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      </Stack.Navigator>
+    );
+  }
+  function SearchUserStack() {
+    return (
+      <Stack.Navigator
+      // screenOptions={{
+      //   headerShown: false,
+      // }}
+      >
+        <Stack.Screen
+          name="SearchUser"
+          component={SearchUser}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="SearchContent" component={SearchContent} />
+        <Stack.Screen name="DisplayImage" component={DisplayImage} />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -62,8 +96,6 @@ function MainStack() {
       }}>
       <Stack.Screen name="Home" component={BottomTabScreen} />
       <Stack.Screen name="Status" component={Status} />
-      {/* <Stack.Screen name="FriendProfile" component={FriendProfile} /> */}
-      {/* <Stack.Screen name="EditProfile" component={EditProfile} /> */}
     </Stack.Navigator>
   );
 }

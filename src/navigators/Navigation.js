@@ -28,8 +28,8 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-      {/* {isUserLoggedin ? <MainStack /> : <AuthStack />} */}
-      <MainStack />
+      {isUserLoggedin ? <MainStack /> : <AuthStack />}
+      {/* <MainStack /> */}
     </NavigationContainer>
   );
 }

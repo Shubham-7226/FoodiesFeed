@@ -40,7 +40,7 @@ const OnBoardScreen = ({navigation}) => {
           <View style={styles.indicator} />
         </View>
         <CustomButton
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('LoginUserStack')}
           title="Get Started"
           customBackgroundColor={COLORS.primary}
         />
