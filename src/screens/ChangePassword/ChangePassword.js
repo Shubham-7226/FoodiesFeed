@@ -14,7 +14,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 
 export default function ChangePassword({navigation}) {
-  let token = useSelector(state => state.user.token);
+  let token = useSelector(state => state.user.user.token);
 
   const [input, setInput] = useState({
     oldPassword: '',
@@ -62,14 +62,15 @@ export default function ChangePassword({navigation}) {
         )
         .then(res => {
           console.log('this is response', res.data.data);
+          setIsLoading(false);
           navigation.pop();
           TostMessage();
-          setIsLoading(false);
         })
         .catch(err => {
           console.log(err.response.data);
-          setErrorMessage(err.response.data.errorMessage);
+          let message = err.response.data.errorMessage;
           setIsLoading(false);
+          setErrorMessage(message);
         });
     }
   }

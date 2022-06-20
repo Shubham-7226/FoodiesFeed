@@ -13,6 +13,7 @@ import EditProfile from '../components/EditProfile';
 import DisplayImage from '../components/DisplayImage';
 import SearchContent from '../components/SearchContent';
 import ChangePassword from '../screens/ChangePassword/ChangePassword';
+import {ProfileBody} from '../components/ProfileBody';
 // import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
 function MainStack() {
   const Tab = createBottomTabNavigator();
@@ -67,6 +68,7 @@ function MainStack() {
         }}>
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="ProfileBody" component={ProfileBody} />
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
       </Stack.Navigator>
     );

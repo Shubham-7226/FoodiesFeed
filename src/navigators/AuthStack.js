@@ -4,7 +4,6 @@ import Login from '../screens/Login/Login';
 import Signup from '../screens/Signup/Signup';
 import OnBoardScreen from '../screens/OnBoardSCreen/OnBoardScreen';
 import ForgotPassword from '../screens/ForgotPassword/ForgotPassword';
-import WebViewForgotPassword from '../components/WebViewForgotPassword';
 
 // import {createStackNavigator} from '@react-navigation/stack';
 
@@ -14,10 +13,9 @@ export default function AuthStack() {
   function LoginUserStack() {
     return (
       <Stack.Navigator
-      // screenOptions={{
-      //   headerShown: false,
-      // }}
-      >
+        screenOptions={{
+          headerShown: false,
+        }}>
         {/* <Stack.Screen
           name="SearchUser"
           component={SearchUser}
@@ -25,10 +23,6 @@ export default function AuthStack() {
         /> */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-        <Stack.Screen
-          name="WebViewForgotPassword"
-          component={WebViewForgotPassword}
-        />
       </Stack.Navigator>
     );
   }

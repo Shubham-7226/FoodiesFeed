@@ -27,7 +27,7 @@ export default function Signup({navigation}) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // const userDetail = useSelector(state => state.user);
+  // const userDetail = useSelector(state => state.user.user);
   // console.log('After userSelector', userDetail);
   //console.log(registerd);
   const dispatch = useDispatch();
@@ -67,9 +67,10 @@ export default function Signup({navigation}) {
         setErrorMessage('');
         let userToken = res.data.data.authenticate;
         console.log('user token before dispatch', userToken);
-        dispatch(registerUser({input, userToken}));
         // navigation.navigate('Login');
         setIsLoading(false);
+        let userImage = res.data.data.user.image;
+        dispatch(registerUser({input, userToken, userImage}));
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);
@@ -110,7 +111,7 @@ export default function Signup({navigation}) {
         />
         <CustomTextInput
           label="DOB"
-          placeholder="DD/MM/YYYY"
+          placeholder="MM/DD/YYYY"
           onChangeText={inputHandler.bind(this, 'dob')}
         />
         <CustomTextInput

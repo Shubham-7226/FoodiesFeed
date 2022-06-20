@@ -9,9 +9,10 @@ import {useSelector, useDispatch} from 'react-redux';
 
 export default function Navigation() {
   let isUserLoggedin = useSelector(state => {
-    return state.user.token;
+    return state.user.user.token;
   });
 
+  // let token = useSelector(state => state.user.token);
   // const [data, setData] = useState(null);
   // setData(AsyncStorage.getItem('token'));
   // console.log(data);

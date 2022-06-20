@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Logout({navigation}) {
   const dispatch = useDispatch();
-  let token = useSelector(state => state.user.token);
+  let token = useSelector(state => state.user.user.token);
   console.log('in Login After userSelector', token);
   console.log(LOGOUT);
 

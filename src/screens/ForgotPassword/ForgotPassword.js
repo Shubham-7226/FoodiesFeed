@@ -1,18 +1,21 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ToastAndroid} from 'react-native';
 import React, {useState} from 'react';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton from '../../components/CustomButton';
 import COLORS from '../../constants/colors';
 import {FORGOT_PASSWORD} from '../../utils/url';
 import axios from 'axios';
-import {WebView} from 'react-native-webview';
 
 export default function ForgotPassword({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [resUrl, setResUrl] = useState('');
-  let url = '';
+  const [errorMessage, setErrorMessage] = useState('');
 
+  let url = '';
+  const TostMessage = () => {
+    ToastAndroid.show('Email sended Sucessfully !', ToastAndroid.SHORT);
+  };
   async function onSubmit() {
     setIsLoading(true);
     await axios
@@ -22,17 +25,20 @@ export default function ForgotPassword({navigation}) {
       .then(res => {
         console.log('this is response', res.data.data.resetUrl);
         url = res.data.data.resetUrl;
+        setResUrl(url);
         setIsLoading(false);
+        navigation.pop();
+        TostMessage();
       })
       .catch(err => {
         console.log(err.response.data);
+        setErrorMessage(err.response.data.errorMessage);
         setIsLoading(false);
       });
     console.log('url in onSUbmit of reset password', url);
     // navigation.navigate('WebViewForgotPassword', {
     //   url: url,
     // });
-    setResUrl(url);
   }
 
   return (
@@ -46,21 +52,25 @@ export default function ForgotPassword({navigation}) {
         }}
         value={email}
       />
-      <CustomButton
-        title="Submit"
-        onPress={onSubmit}
-        customBackgroundColor={COLORS.primary}
-        customStyle={{minWidth: '80%'}}
-      />
-      {resUrl ? (
-        <View style={styles.webViewStyles}>
-          <WebView
-            source={{
-              uri: resUrl,
-            }}
-          />
-        </View>
+      {errorMessage ? (
+        <Text style={styles.errorMessageStyle}>{errorMessage}</Text>
       ) : null}
+      <View style={styles.buttonContainer}>
+        <CustomButton
+          title="Submit"
+          customStyle={{width: '45%'}}
+          onPress={onSubmit}
+          customBackgroundColor={COLORS.primary}
+        />
+        <CustomButton
+          title="Cancel"
+          customStyle={{width: '45%'}}
+          onPress={() => {
+            navigation.pop();
+          }}
+          customBackgroundColor={COLORS.primary}
+        />
+      </View>
     </View>
   );
 }
@@ -69,12 +79,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
+    padding: 20,
   },
-  webViewStyles: {
-    flex: 1,
-    position: 'absolute',
-    zIndex: 1,
-    backgroundColor: 'red',
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  errorMessageStyle: {
+    color: 'red',
+    paddingVertical: 5,
   },
 });

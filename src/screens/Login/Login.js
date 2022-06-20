@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomActivityIndicator from '../../components/CustomActivityIndicator';
 
 export default function Login({navigation}) {
-  const userDetail = useSelector(state => state.user);
+  // const userDetail = useSelector(state => state.user.user);
   // console.log('in Login After userSelector', userDetail);
 
   const dispatch = useDispatch();
@@ -69,18 +69,20 @@ export default function Login({navigation}) {
         password: password,
       })
       .then(res => {
-        console.log('this is token', res.data.data.authenticate);
+        console.log('this is token', res.data.data.user.image);
         // setUserToken(res.data.data.authenticate);
-        setErrorMessage('');
         let userToken = res.data.data.authenticate;
         console.log('user token before dispatch', userToken);
+        setErrorMessage('');
         // AsyncStorage.setItem('token', JSON.stringify(userToken));
         // const token = await AsyncStorage.getItem('token');
 
         // console.log('in navigation', JSON.parse(token));
-        dispatch(loginUser({input, userToken}));
-        // navigation.navigate('Login');
+        let userImage = res.data.data.user.image;
         setIsLoading(false);
+        // dispatch(uploadImage({image: userImage}));
+        // navigation.navigate('Login');
+        dispatch(loginUser({input, userToken, userImage}));
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);

@@ -3,6 +3,7 @@ import {
   SET_USER_LOGIN,
   SET_USER_REGISTER,
   SET_USER_LOG_OUT,
+  SET_USER_IMAGE,
 } from '../actions/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -12,46 +13,68 @@ const initialState = {
     userName: '',
     email: '',
     token: '',
+    image: '',
   },
 };
 
 const userReducer = (state = initialState, action) => {
+  // const {user} = state;
   switch (action.type) {
     case SET_USER_LOGIN:
-      // const {user} = state;
       AsyncStorage.setItem('token', JSON.stringify(action.token));
-      // console.log(
-      //   '----------------------------',
-      //   AsyncStorage.getItem('token'),
-      // );
-      console.log(action);
+      console.log('in login', state.user);
+
+      // console.log(action);
       return {
-        ...state.user,
-        email: action.payload.email,
-        token: action.token,
+        ...state,
+        user: {
+          ...state.user,
+          email: action.payload.email,
+          token: action.token,
+          image: action.payload.userImage,
+        },
+      };
+
+    case SET_USER_IMAGE:
+      console.log('in set user image', typeof action.payload);
+      // console.log('in set image', user);
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          image: action.payload,
+        },
       };
 
     case SET_USER_REGISTER:
-      // const {user} = state;
       AsyncStorage.setItem('token', action.token);
       console.log('in reducer', action);
       return {
-        ...state.user,
-        email: action.payload.email,
-        name: action.payload.name,
-        userName: action.payload.username,
-        token: action.token,
+        ...state,
+        user: {
+          ...state.user,
+          email: action.payload.email,
+          name: action.payload.name,
+          userName: action.payload.username,
+          token: action.token,
+          image: action.payload.userImage,
+        },
       };
 
     case SET_USER_LOG_OUT:
       AsyncStorage.removeItem('token');
       console.log('in reducer expecting null', AsyncStorage.getItem('token'));
+      // const {user} = state;
       return {
-        // ...state.user,
-        email: '',
-        name: '',
-        userName: '',
-        token: '',
+        ...state,
+        user: {
+          ...state.user,
+          email: '',
+          name: '',
+          userName: '',
+          token: '',
+          image: '',
+        },
       };
 
     default:

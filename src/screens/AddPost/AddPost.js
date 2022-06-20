@@ -9,6 +9,7 @@ import {
   ImageBackground,
   ActivityIndicator,
   Alert,
+  TostMessage,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton from '../../components/CustomButton';
@@ -30,7 +31,7 @@ export default function AddPost({navigation}) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const dispatch = useDispatch();
-  let token = useSelector(state => state.user.token);
+  let token = useSelector(state => state.user.user.token);
   // console.log('in add post', token);
   let data = new FormData();
   data.append('postImage', {
@@ -84,7 +85,9 @@ export default function AddPost({navigation}) {
     // navigation.navigate('Home');
     setModalVisible(!isModalVisible);
   }
-
+  const TostMessage = () => {
+    ToastAndroid.show('Post added Sucessfully !', ToastAndroid.SHORT);
+  };
   async function postButtonHandler() {
     setIsLoading(true);
     console.log('this is form data', data);
@@ -98,15 +101,18 @@ export default function AddPost({navigation}) {
       .then(res => {
         console.log('response while adding post', res.data.data);
         setIsLoading(false);
+        setImage('');
+        setCaption('');
+        TostMessage();
       })
       .catch(err => {
         console.log(
           'this is error message while posting data',
-          err.response.data,
+          err?.response?.data,
         );
         setIsLoading(false);
       });
-    setIsLoading(false);
+    // setIsLoading(false);
 
     if (image == '') {
       Alert.alert('Upload Image', 'Please upload image', [
@@ -256,6 +262,7 @@ const styles = StyleSheet.create({
     height: 300,
     alignItems: 'flex-end',
   },
+
   activityIndicatorStyle: {
     position: 'absolute',
     top: '45%',

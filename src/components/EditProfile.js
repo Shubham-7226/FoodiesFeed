@@ -2,33 +2,86 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   ToastAndroid,
   Image,
   TextInput,
-  Pressable,
+  StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import COLORS from '../constants/colors';
 import Modal from 'react-native-modal';
+import axios from 'axios';
+import {uploadImage} from '../store/actions';
 import CustomButton from './CustomButton';
 import ImagePicker from 'react-native-image-crop-picker';
+import {UPLOAD_IMAGE} from '../utils/url';
+import {useSelector, useDispatch} from 'react-redux';
+import FormData from 'form-data';
+
 const EditProfile = ({route, navigation}) => {
   const {name, accountName, profileImage} = route.params;
   const [isModalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState(profileImage);
+  const [image, setImage] = useState();
+  // const [oldimage, setOldImage] = useState(profileImage);
+  const [isLoading, setIsLoading] = useState(false);
+
+  let token = useSelector(state => state.user.user.token);
+  const dispatch = useDispatch();
+
+  // console.log('in add post', token);
+
+  async function uploadImageToApi() {
+    let data = new FormData();
+    // console.log('this is image', response);
+    data.append('profilepic', {
+      name: image.modificationDate,
+      type: image.mime,
+      uri: image.path,
+    });
+    console.log('this is form data', data);
+
+    await axios
+      .put(UPLOAD_IMAGE, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(res => {
+        console.log('response while adding post', res.data.data);
+        dispatch(uploadImage({image: image.path}));
+        // setIsLoading(false);
+      })
+      .catch(err => {
+        // setIsLoading(false);
+        console.log(
+          'this is error message while posting data',
+          err.response.data,
+        );
+      });
+    // setIsLoading(false);
+
+    // if (image.path == '') {
+    //   Alert.alert('Upload Image', 'Please upload image', [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+    //   ]);
+    // } else {
+    // }
+  }
   function photoFromCameraHandler() {
     setModalVisible(!isModalVisible);
     ImagePicker.openCamera({
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       cropping: true,
-      compressImageQuality: 0.7,
+      compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
-          setImage(response.path);
-          console.log('this is image', image);
+          setImage(response);
+          console.log('this is image', response);
         }
       })
       .catch(err => {
@@ -42,17 +95,18 @@ const EditProfile = ({route, navigation}) => {
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       cropping: true,
-      compressImageQuality: 0.7,
+      compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
-          setImage(response.path);
-          console.log('this is image' + image);
+          console.log('this is image' + response);
+          setImage(response);
         }
       })
       .catch(err => {
         console.log('no image selected');
       });
+    // dispatch(uploadImage(image.path));
   }
   function addPostButtonEventHandler() {
     // console.log('button Pressed');
@@ -63,39 +117,41 @@ const EditProfile = ({route, navigation}) => {
     ToastAndroid.show('Edited Sucessfully !', ToastAndroid.SHORT);
   };
   return (
-    <View
-      style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-      }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 10,
-        }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+    <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator
+          size={'large'}
+          color="orange"
+          style={styles.activityIndicatorStyle}
+        />
+      ) : null}
+
+      <View style={styles.headerContainer}>
+        <Pressable onPress={() => navigation.goBack()}>
           <Ionic name="close-outline" style={{fontSize: 35}} />
-        </TouchableOpacity>
+        </Pressable>
         <Text style={{fontSize: 16, fontWeight: 'bold'}}>Edit Profile</Text>
-        <TouchableOpacity
+        <Pressable
           onPress={() => {
+            setIsLoading(true);
+
+            uploadImageToApi();
+            setIsLoading(false);
+
             TostMessage();
-            navigation.goBack();
+            navigation.navigate('Profile');
           }}>
           <Ionic
             name="checkmark"
             style={{fontSize: 35, color: COLORS.primary}}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <Pressable onPress={addPostButtonEventHandler}>
         <View style={{padding: 20, alignItems: 'center'}}>
           <Image
-            source={{uri: image}}
-            style={{width: 80, height: 80, borderRadius: 100}}
+            source={{uri: image ? image.path : profileImage}}
+            style={styles.imageStyles}
           />
           <Text
             style={{
@@ -116,11 +172,7 @@ const EditProfile = ({route, navigation}) => {
           <TextInput
             placeholder="name"
             defaultValue={name}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
+            style={styles.inputTextStyles}
           />
         </View>
         <View style={{paddingVertical: 10}}>
@@ -133,11 +185,7 @@ const EditProfile = ({route, navigation}) => {
           <TextInput
             placeholder="accountname"
             defaultValue={accountName}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
+            style={styles.inputTextStyles}
           />
         </View>
       </View>
@@ -182,33 +230,47 @@ const EditProfile = ({route, navigation}) => {
         </View>
       </Modal>
       <View>
-        <Pressable onPress={() => {navigation.navigate('ChangePassword')}}>
-          <Text
-            style={{
-              marginVertical: 10,
-              padding: 10,
-              color: COLORS.primary,
-              borderTopWidth: 1,
-              borderBottomWidth: 1,
-              borderColor: '#EFEFEF',
-            }}>
-            Change Password
-          </Text>
-        </Pressable>
-        {/* <Text
-          style={{
-            marginVertical: 10,
-            padding: 10,
-            color: '#3493D9',
-            borderTopWidth: 1,
-            borderBottomWidth: 1,
-            borderColor: '#EFEFEF',
+        <Pressable
+          onPress={() => {
+            navigation.navigate('ChangePassword');
           }}>
-          Persnol information setting
-        </Text> */}
+          <Text style={styles.changePassStyles}>Change Password</Text>
+        </Pressable>
       </View>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'white',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  imageStyles: {width: 80, height: 80, borderRadius: 100},
+  activityIndicatorStyle: {
+    position: 'absolute',
+    top: '45%',
+    left: '45%',
+  },
+  inputTextStyles: {
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderColor: '#CDCDCD',
+  },
+  changePassStyles: {
+    marginVertical: 10,
+    padding: 10,
+    color: COLORS.primary,
+    // borderTopWidth: 1,
+    // borderBottomWidth: 1,
+    // borderColor: '#EFEFEF',
+  },
+});
 
 export default EditProfile;

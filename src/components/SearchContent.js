@@ -1,7 +1,9 @@
 import React from 'react';
 import {View, Text, Pressable, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const SearchContent = ({imgdata}) => {
+  const navigation = useNavigation();
   // const {data} = props;
   const searchData = [
     {
@@ -54,8 +56,13 @@ const SearchContent = ({imgdata}) => {
                     <Pressable
                       delayLongPress={1000}
                       key={imgIndex}
-                      onLongPress={() => imgdata(imageData)}
-                      onPressOut={() => imgdata(null)}
+                      onPress={() => {
+                        navigation.navigate('DisplayImage', {
+                          profileimage: imageData,
+                        });
+                      }}
+                      // onLongPress={() => imgdata(imageData)}
+                      // onPressOut={() => imgdata(null)}
                       style={{paddingBottom: 2, width: '33%'}}>
                       <Image
                         source={{uri: imageData}}

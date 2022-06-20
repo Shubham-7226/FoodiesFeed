@@ -10,7 +10,13 @@ export const ProfileBody = ({
   post,
   followers,
   following,
+  // route,
 }) => {
+  // const {updatedImage} = route?.params;
+  const [image, setImage] = useState();
+  const setData = data => {
+    setImage(data);
+  };
   return (
     <View>
       {accountName ? (
@@ -29,8 +35,10 @@ export const ProfileBody = ({
           style={{
             alignItems: 'center',
           }}>
+          {/* updatedImage ? updatedImage : */}
           <Image
-            source={{uri: profileImage}}
+            key={Date.now()}
+            source={{uri: `${profileImage}?${new Date().getTime()}`}}
             style={styles.profileImageViewContainer}
           />
           <Text

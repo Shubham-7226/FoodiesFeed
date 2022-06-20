@@ -8,10 +8,9 @@ import Stories from '../../components/Stories';
 import {useSelector, useDispatch} from 'react-redux';
 
 export default function Home({navigation}) {
-  const userDetail = useSelector(state => state.user);
-  useEffect(() => {
-    console.log('in HOME After userSelector', userDetail);
-  }, [navigation]);
+  const userDetail = useSelector(state => state.user.user);
+  console.log('in HOME After userSelector', userDetail);
+  useEffect(() => {}, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -29,7 +28,7 @@ export default function Home({navigation}) {
           }}>
           FoodiesFeed
         </Text>
-        <Feather name="navigation" style={{fontSize: 24}} />
+        {/* <Feather name="navigation" style={{fontSize: 24}} /> */}
       </View>
       <Stories />
       <Posts />
