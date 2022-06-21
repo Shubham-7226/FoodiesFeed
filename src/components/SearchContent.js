@@ -61,8 +61,8 @@ const SearchContent = ({imgdata}) => {
                           profileimage: imageData,
                         });
                       }}
-                      // onLongPress={() => imgdata(imageData)}
-                      // onPressOut={() => imgdata(null)}
+                      onLongPress={() => imgdata(imageData)}
+                      onPressOut={() => imgdata(null)}
                       style={{paddingBottom: 2, width: '33%'}}>
                       <Image
                         source={{uri: imageData}}

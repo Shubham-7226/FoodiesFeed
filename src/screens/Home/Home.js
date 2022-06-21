@@ -6,12 +6,46 @@ import Feather from 'react-native-vector-icons/Feather';
 import Posts from '../../components/Posts';
 import Stories from '../../components/Stories';
 import {useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
+import {GET_USER} from '../../utils/url';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getUserInfo} from '../../store/actions';
 
 export default function Home({navigation}) {
-  const userDetail = useSelector(state => state.user.user);
-  console.log('in HOME After userSelector', userDetail);
-  useEffect(() => {}, [navigation]);
+  const [isUserLoggedin, setIsUserLoggedin] = useState();
 
+  // const getTokenFromAsync = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem('userToken');
+  //     setIsUserLoggedin(jsonValue != null ? JSON.parse(jsonValue) : null);
+  //     console.log(
+  //       'in navigation after getting token from async',
+  //       isUserLoggedin,
+  //     );
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getTokenFromAsync();
+  //   getUser();
+  // }, []);
+  // const getUser = async () => {
+  //   if (isUserLoggedin !== null) {
+  //     data = await axios.get(GET_USER, {
+  //       headers: {
+  //         Authorization: `Bearer ${isUserLoggedin}`,
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+  //     console.log('in profile after api call', data?.data?.data);
+  //     let user = data?.data?.data;
+  //     let image = user.image;
+  //     let userId = user.id;
+  //     dispatch(getUserInfo({isUserLoggedin, image, userId}));
+  //   }
+  // };
   return (
     <View style={styles.container}>
       <StatusBar

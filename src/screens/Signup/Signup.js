@@ -63,14 +63,13 @@ export default function Signup({navigation}) {
       })
       .then(res => {
         console.log('this is token', res.data.data.authenticate);
-        // setUserToken(res.data.data.authenticate);
         setErrorMessage('');
         let userToken = res.data.data.authenticate;
         console.log('user token before dispatch', userToken);
-        // navigation.navigate('Login');
         setIsLoading(false);
         let userImage = res.data.data.user.image;
-        dispatch(registerUser({input, userToken, userImage}));
+        let userId = res.data.data.user.id;
+        dispatch(loginUser({input, userToken, userImage, userId}));
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);

@@ -9,7 +9,7 @@ import {
   ImageBackground,
   ActivityIndicator,
   Alert,
-  TostMessage,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton from '../../components/CustomButton';
@@ -100,14 +100,12 @@ export default function AddPost({navigation}) {
       })
       .then(res => {
         console.log('response while adding post', res.data.data);
-        setIsLoading(false);
-        setImage('');
-        setCaption('');
         TostMessage();
+        setIsLoading(false);
       })
       .catch(err => {
         console.log(
-          'this is error message while posting data',
+          'this is error message while posting data in add post',
           err?.response?.data,
         );
         setIsLoading(false);
@@ -246,7 +244,11 @@ export default function AddPost({navigation}) {
         title="POST"
         customBackgroundColor={COLORS.primary}
         customStyle={{margin: 12}}
-        onPress={postButtonHandler}
+        onPress={() => {
+          postButtonHandler();
+          setImage('');
+          setCaption('');
+        }}
       />
     </View>
   );

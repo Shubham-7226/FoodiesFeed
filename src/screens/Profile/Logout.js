@@ -46,6 +46,8 @@ export default function Logout({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    width: '40%',
+    // height: 50,
   },
 });

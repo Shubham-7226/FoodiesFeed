@@ -16,6 +16,19 @@ const BottomTabView = ({id}) => {
 
   const dispatch = useDispatch();
   let token = useSelector(state => state.user.user.token);
+  // let user = useSelector(state => state.user.user);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      getUserPosts();
+      // Call any action
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, []);
+
   const getUserPosts = async () => {
     const url = `${GET_SELF_POSTS}${id}`;
     console.log(url);
@@ -35,12 +48,9 @@ const BottomTabView = ({id}) => {
     // console.log('-----------------------in useEffect of profile', user);
     // dispatch(uploadImage({image: user?.image}));
   };
-  useEffect(() => {
-    getUserPosts();
-  }, [navigation]);
 
   let squares = [];
-  let numberOfSquare = postdata?.limit;
+  let numberOfSquare = postdata?.posts?.length;
   // console.log(
   //   '------------------------------------------------this is post data in bottom view',
   //   postdata,
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     paddingVertical: 5,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
 });
 export default BottomTabView;

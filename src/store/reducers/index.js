@@ -4,6 +4,7 @@ import {
   SET_USER_REGISTER,
   SET_USER_LOG_OUT,
   SET_USER_IMAGE,
+  GET_USER_INFO,
 } from '../actions/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,6 +15,7 @@ const initialState = {
     email: '',
     token: '',
     image: '',
+    userId: '',
   },
 };
 
@@ -32,9 +34,23 @@ const userReducer = (state = initialState, action) => {
           email: action.payload.email,
           token: action.token,
           image: action.payload.userImage,
+          userId: action.payload.userId,
         },
       };
+    case GET_USER_INFO:
+      // AsyncStorage.setItem('token', JSON.stringify(action.token));
+      console.log('in login', state.user);
 
+      // console.log(action);
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          token: action.token,
+          image: action.payload.userImage,
+          userId: action.payload.userId,
+        },
+      };
     case SET_USER_IMAGE:
       console.log('in set user image', typeof action.payload);
       // console.log('in set image', user);
@@ -58,6 +74,7 @@ const userReducer = (state = initialState, action) => {
           userName: action.payload.username,
           token: action.token,
           image: action.payload.userImage,
+          userId: action.payload.userId,
         },
       };
 
@@ -74,6 +91,7 @@ const userReducer = (state = initialState, action) => {
           userName: '',
           token: '',
           image: '',
+          userId: '',
         },
       };
 

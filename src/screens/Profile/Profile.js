@@ -1,17 +1,23 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import {ProfileBody, ProfileButtons} from '../../components/ProfileBody';
-import Entypo from 'react-native-vector-icons/Entypo';
 import BottomTabView from '../../components/BottomTabView';
 import Logout from './Logout';
 import {useSelector, useDispatch} from 'react-redux';
 import {GET_USER} from '../../utils/url';
 import {uploadImage} from '../../store/actions';
-
+import BottomSheet from 'react-native-simple-bottom-sheet';
+import Modal from 'react-native-modal';
 import axios from 'axios';
-
+import CustomButton from '../../components/CustomButton';
 const Profile = ({navigation}) => {
   const token = useSelector(state => state.user.user.token);
+  const userId = useSelector(state => state.user.user.userId);
+  const [isModalVisible, setModalVisible] = useState(false);
+  function modalHandler() {
+    setModalVisible(!isModalVisible);
+  }
+
   let data;
   const userDetail = useSelector(state => state.user.user.image);
   // console.log('+++++++++++++++++++++++++in profile after selector', userDetail);
@@ -34,7 +40,7 @@ const Profile = ({navigation}) => {
   };
   useEffect(() => {
     getUser();
-  }, [navigation]);
+  }, [userDetail]);
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: 'white'}}>
@@ -46,6 +52,7 @@ const Profile = ({navigation}) => {
           followers={user?.followCount}
           following={user?.followingCount}
           post={user?.postCount}
+          modalVisible={modalHandler}
         />
         <ProfileButtons
           id={0}
@@ -56,10 +63,65 @@ const Profile = ({navigation}) => {
         />
       </View>
 
-      <BottomTabView id={user?.id} />
+      <BottomTabView id={userId} />
+      <Modal
+        isVisible={isModalVisible}
+        swipeDirection={'down'}
+        swipeThreshold={10}
+        onSwipeComplete={() => {
+          setModalVisible(false);
+        }}>
+        <View style={styles.modalContainer}>
+          <View
+            style={{
+              height: 3,
+              width: '20%',
+              marginVertical: 12,
+              backgroundColor: '#ccc',
+              alignSelf: 'center',
+            }}
+          />
+          {/* <Text>Logout</Text> */}
+          <View
+            style={{
+              justifyContent: 'center',
+              height: '80%',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                // alignSelf: 'center',
+              }}>
+              <CustomButton
+                title="Cancel"
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+                customBackgroundColor={COLORS.primary}
+                customStyle={{width: '40%'}}
+              />
+              <Logout />
+            </View>
+          </View>
+        </View>
+      </Modal>
       {/* <Logout /> */}
     </View>
   );
 };
+const styles = StyleSheet.create({
+  modalContainer: {
+    backgroundColor: 'white',
+    height: 120,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    justifyContent: 'center',
+
+    // zIndex: 1,
+  },
+});
 
 export default Profile;

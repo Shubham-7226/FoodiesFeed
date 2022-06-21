@@ -10,3 +10,4 @@ export const CREATE_POST = `${API_URL}/posts`;
 export const FORGOT_PASSWORD = `${API_URL}/forgot-password`;
 export const CHANGE_PASSWORD = `${API_URL}/change-password`;
 export const GET_SELF_POSTS = `${API_URL}/posts/users/`;
+export const GET_FOLLOWING_POSTS = `${API_URL}/posts/user/following`;

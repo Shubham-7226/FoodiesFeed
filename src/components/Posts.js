@@ -8,52 +8,85 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import axios from 'axios';
+import {GET_FOLLOWING_POSTS} from '../utils/url';
+import {useNavigation} from '@react-navigation/native';
+import COLORS from '../constants/colors';
 export default function Posts() {
-  const [like, setLike] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [listData, setListData] = useState([]);
+  const navigation = useNavigation();
 
-  useEffect(() => {}, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [like, setLike] = useState(false);
+  const [comment, setComment] = useState();
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [listData, setListData] = useState([]);
+  const userToken = useSelector(state => state.user.user.token);
+  // const userDetail = useSelector(state => state.user.user);
+  const [posts, setPosts] = useState([]);
+  console.log('in HOME After userSelector', userToken);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getPosts();
+    });
+    console.log('useEffect posts', posts);
+    return unsubscribe;
+  }, [navigation]);
+
+  const getPosts = async () => {
+    console.log(GET_FOLLOWING_POSTS);
+    data = await axios.get(GET_FOLLOWING_POSTS, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('in posts after api call', data?.data?.data?.posts);
+    setPosts(data?.data?.data?.posts);
+    console.log('after api call posts', posts);
+  };
 
   function FeedItemHandler({item}) {
+    console.log('this is item', item);
     // let isLiked = 'heart-outline';
-    let data = 5;
     return (
       <View style={styles.itemContainerWrapper}>
         <View style={styles.itemContainer}>
           <Image
             source={{
-              uri: 'https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg',
+              uri: item?.User.image,
             }}
-            style={{height: 50, width: 50, borderRadius: 50}}
+            style={styles.userProfileImageStyles}
           />
 
           <View style={styles.textContainer}>
-            <Text>Name</Text>
+            <Text>{item?.User.userName}</Text>
             <Text>{new Date().toString().substring(0, 16)}</Text>
           </View>
         </View>
-
-        <Image
-          source={{
-            uri: 'https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg',
-          }}
-          style={{height: 200}}
-        />
+        <View style={styles.postImageContainer}>
+          <Image
+            source={{
+              uri: item?.image,
+            }}
+            style={styles.postImageStyles}
+          />
+        </View>
         <Text style={styles.captionContainer}>
-          caption of this post is ....
+          <Text style={styles.captionTextStyle}>{item?.User.userName}</Text>{' '}
+          {item?.caption}
         </Text>
-        <View style={{height: 2, width: '100%', backgroundColor: '#cccc'}} />
+        <View style={styles.partitionStyle} />
         <View style={styles.iconWrapper}>
           <Icon
             name={like ? 'heart-sharp' : 'heart-outline'}
             size={30}
             style={{marginLeft: 5}}
-            color="#F36D67"
+            color={COLORS.primary}
             onPress={() => {
-              // console.log('like button pressed');
+              console.log('like button pressed');
               // if (isLiked === 'heart-outline') {
               //   isLiked = 'heart-sharp';
               // } else {
@@ -75,29 +108,30 @@ export default function Posts() {
         <View style={{paddingHorizontal: 15}}>
           <Text>
             Liked by {like ? 'you and' : ''}{' '}
-            {like ? data.likes + 1 : data.likes} others
+            {like ? item?.likeCount + 1 : item?.likeCount} others
           </Text>
 
-          <Text style={{opacity: 0.4, paddingVertical: 2}}>
-            View all comments
+          <Text style={styles.commentTextStyle}>
+            View all {item?.commentCount} comments
           </Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={styles.profileInCommentStyle}>
+            <View style={styles.profileContainerWrapper}>
               <Image
                 source={{
-                  uri: 'https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg',
+                  uri: item?.User.image,
                 }}
-                style={{
-                  width: 25,
-                  height: 25,
-                  borderRadius: 100,
-                  backgroundColor: 'orange',
-                  marginRight: 10,
+                style={styles.profileImageInCommentStyle}
+              />
+              <TextInput
+                placeholder="Add a comment "
+                style={styles.commentTextStyle}
+                value={comment}
+                onChangeText={data => {
+                  setComment(data);
                 }}
               />
-              <TextInput placeholder="Add a comment " style={{opacity: 0.5}} />
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.iconContainer}>
               <Icon
                 size={25}
                 color="black"
@@ -114,33 +148,20 @@ export default function Posts() {
   }
   return (
     <View style={styles.container}>
-      {/* <View style={styles.itemContainer}>
-        <Image
-          source={{
-            uri: 'https://img.freepik.com/free-photo/flat-lay-batch-cooking-composition_23-2148765597.jpg?w=2000',
-          }}
-          style={{height: 50, width: 50, borderRadius: 50}}
-        />
-
-        <View style={styles.textContainer}>
-          <Text>Name</Text>
-          <Text>{new Date().toString().substring(0, 16)}</Text>
-        </View>
-      </View> */}
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={false}
             onRefresh={() => {
               setIsLoading(true);
-              //func
+              // getPosts();
               setIsLoading(false);
             }}
           />
         }
-        data={[1, 2, 3]}
+        data={posts}
         renderItem={FeedItemHandler}
-        keyExtractor={item => item}
+        keyExtractor={item => item.id}
       />
     </View>
   );
@@ -150,27 +171,54 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  itemContainer: {flexDirection: 'row', alignItems: 'center'},
   iconWrapper: {
     flexDirection: 'row',
     flex: 1,
     padding: 5,
   },
+  postImageContainer: {
+    alignItems: 'center',
+  },
+  captionTextStyle: {fontWeight: 'bold'},
   captionContainer: {
     margin: 5,
     color: '#333',
-    fontSize: 12,
+    fontSize: 14,
     padding: 5,
   },
+  commentTextStyle: {opacity: 0.5},
+  profileImageInCommentStyle: {
+    width: 25,
+    height: 25,
+    borderRadius: 100,
+    backgroundColor: 'orange',
+    marginRight: 10,
+  },
+  partitionStyle: {height: 2, width: '100%', backgroundColor: '#cccc'},
+  postImageStyles: {height: 200, width: '98%'},
   itemContainerWrapper: {
-    margin: 10,
+    margin: 14,
     // padding: 10,
-    borderRadius: 10,
-    elevation: 10,
+    borderRadius: 5,
+    borderColor: '#ccc',
+    // elevation: 10,
+    // shadowOffset: {width: 0, height: 1},
+    // shadowColor: '#333',
+    // shadowOpacity: 0.9,
+    // shadowRadius: 1,
+    // backgroundColor: 'white',
+    elevation: 2,
+    shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
-    shadowColor: '#333',
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.5,
     shadowRadius: 1,
-    backgroundColor: 'white',
+  },
+  profileContainerWrapper: {flexDirection: 'row', alignItems: 'center'},
+  profileInCommentStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
   },
   itemContainer: {
     // flex: 1,
@@ -181,4 +229,6 @@ const styles = StyleSheet.create({
   textContainer: {
     marginLeft: 10,
   },
+  commentTextStyle: {opacity: 0.4, paddingVertical: 2},
+  userProfileImageStyles: {height: 50, width: 50, borderRadius: 50},
 });

@@ -57,7 +57,7 @@ const EditProfile = ({route, navigation}) => {
       .catch(err => {
         // setIsLoading(false);
         console.log(
-          'this is error message while posting data',
+          'this is error message while posting data in profile',
           err.response.data,
         );
       });
@@ -150,7 +150,11 @@ const EditProfile = ({route, navigation}) => {
       <Pressable onPress={addPostButtonEventHandler}>
         <View style={{padding: 20, alignItems: 'center'}}>
           <Image
-            source={{uri: image ? image.path : profileImage}}
+            source={{
+              uri: image
+                ? `${image.path}?${new Date().getTime()}`
+                : `${profileImage}?${new Date().getTime()}`,
+            }}
             style={styles.imageStyles}
           />
           <Text

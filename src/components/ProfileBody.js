@@ -1,8 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import COLORS from '../constants/colors';
+import Ionic from 'react-native-vector-icons/Ionicons';
+import Modal from 'react-native-modal';
+import Logout from '../screens/Profile/Logout';
 export const ProfileBody = ({
   name,
   accountName,
@@ -10,13 +20,20 @@ export const ProfileBody = ({
   post,
   followers,
   following,
+  modalVisible,
   // route,
 }) => {
   // const {updatedImage} = route?.params;
   const [image, setImage] = useState();
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const setData = data => {
     setImage(data);
   };
+  function ButtonEventHandler() {
+    modalVisible();
+    setModalVisible(!isModalVisible);
+  }
   return (
     <View>
       {accountName ? (
@@ -28,6 +45,9 @@ export const ProfileBody = ({
             }}>
             {accountName}
           </Text>
+          <Pressable onPress={ButtonEventHandler}>
+            <Ionic name="menu" style={{fontSize: 35}} />
+          </Pressable>
         </View>
       ) : null}
       <View style={styles.profileViewContainer}>
@@ -38,7 +58,7 @@ export const ProfileBody = ({
           {/* updatedImage ? updatedImage : */}
           <Image
             key={Date.now()}
-            source={{uri: `${profileImage}?${new Date().getTime()}`}}
+            source={{uri: `${profileImage}?${new Date().getMinutes()}`}}
             style={styles.profileImageViewContainer}
           />
           <Text
