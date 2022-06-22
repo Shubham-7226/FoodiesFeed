@@ -45,10 +45,10 @@ export default function AddPost({navigation}) {
   function photoFromCameraHandler() {
     setModalVisible(!isModalVisible);
     ImagePicker.openCamera({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
+      compressImageMaxWidth: 400,
+      compressImageMaxHeight: 400,
       cropping: true,
-      compressImageQuality: 0.8,
+      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -64,10 +64,10 @@ export default function AddPost({navigation}) {
   function photoFromGalleryHandler() {
     setModalVisible(!isModalVisible);
     ImagePicker.openPicker({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
+      compressImageMaxWidth: 400,
+      compressImageMaxHeight: 400,
       cropping: true,
-      compressImageQuality: 0.8,
+      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -100,7 +100,6 @@ export default function AddPost({navigation}) {
       })
       .then(res => {
         console.log('response while adding post', res.data.data);
-        TostMessage();
         setIsLoading(false);
       })
       .catch(err => {
@@ -142,11 +141,12 @@ export default function AddPost({navigation}) {
         <Pressable>
           <ImageBackground
             style={styles.imagePostStyle}
-            source={{uri: image.path}}>
+            source={{uri: image.path}}
+            resizeMode="cover">
             <Icon
               name="close"
               size={30}
-              color="white"
+              color={COLORS.primary}
               onPress={() => {
                 // console.log('cancel image  button pressed');
                 setImage('');
@@ -246,6 +246,8 @@ export default function AddPost({navigation}) {
         customStyle={{margin: 12}}
         onPress={() => {
           postButtonHandler();
+          TostMessage();
+
           setImage('');
           setCaption('');
         }}
@@ -261,7 +263,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 10,
   },
   imagePostStyle: {
-    height: 300,
+    height: 400,
     alignItems: 'flex-end',
   },
 

@@ -7,93 +7,142 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import COLORS from '../constants/colors';
+import {GET_SINGLE_POST} from '../utils/url';
+import {useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function DisplayImage({route}) {
-  const [image, setImage] = useState(null);
-  const [like, setLike] = useState();
+export default function DisplayImage({route, navigation}) {
+  const [item, setItem] = useState(null);
+  const [like, setLike] = useState(false);
+  const [comment, setComment] = useState();
+  const user = useSelector(state => state.user.user);
+  console.log('in DisplayImage after selector', user);
 
-  const {profileimage} = route.params;
+  const {postId} = route.params;
+  console.log(postId);
+  const url = `${GET_SINGLE_POST}${postId}`;
+  console.log(url);
+  useEffect(() => {
+    getPost();
+  }, [postId]);
+
+  const getPost = async () => {
+    console.log(url);
+    data = await axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          // 'Content-Type': 'multipart/form-data',
+        },
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    console.log('in displayimage after api call', data?.data?.data);
+    let postData = data?.data?.data;
+    setItem(postData);
+    console.log('after api call DisplayImage', postData);
+
+    console.log('after api call DisplayImage', item);
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.mainContainerStyles}>
-        <View style={styles.userHeaderWrapper}>
-          <View style={styles.userImageWrapper}>
-            <Image source={{uri: profileimage}} style={styles.imageStyle} />
-            <View style={{paddingLeft: 8}}>
-              <Text style={{fontSize: 12, fontWeight: '600'}}>
-                the_anonymous_guy
-              </Text>
-            </View>
-          </View>
-        </View>
+    <View style={styles.itemContainerWrapper}>
+      <View style={styles.itemContainer}>
         <Image
           source={{
-            uri: profileimage,
+            uri: item?.User.image,
           }}
-          style={{height: 200}}
+          style={styles.userProfileImageStyles}
         />
-        <Text style={styles.captionContainer}>
-          caption of this post is ....
-        </Text>
-        <View style={styles.partitionStyle} />
-        <View style={styles.iconWrapper}>
-          <Icon
-            name={like ? 'heart-sharp' : 'heart-outline'}
-            size={30}
-            style={{marginLeft: 5}}
-            color={COLORS.primary}
-            onPress={() => {
-              setLike(!like);
-            }}
-          />
-          <Icon
-            name="ios-chatbubble-outline"
-            size={30}
-            style={{marginLeft: 10}}
-            onPress={() => {
-              console.log('comment button pressed');
-            }}
-          />
-        </View>
-        <View style={styles.likeAndCommentContainer}>
-          <Text>
-            Liked by
-            {/* {like ? 'you and' : ''} {like ? 
-          data.likes + 1 : data.likes} */}
-            others
-          </Text>
 
-          {/* <Text style={{opacity: 0.4, paddingVertical: 2}}>
-            View all comments
-          </Text> */}
-          <View style={styles.addCommentContainer}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={{
-                  uri: profileimage,
-                }}
-                style={styles.commentProfileStyles}
-              />
-              <TextInput placeholder="Add a comment " style={{opacity: 0.5}} />
-            </View>
-            <View style={styles.sendIconContainer}>
-              <Icon
-                size={25}
-                color="black"
-                name="send"
-                onPress={() => {
-                  console.log('send comment pressed');
-                }}
-              />
-            </View>
+        <View style={styles.textContainer}>
+          <Text>{item?.User.userName}</Text>
+          <Text>{item?.createdAt.toString().substring(0, 10)}</Text>
+        </View>
+      </View>
+      <View style={styles.postImageContainer}>
+        <Image
+          source={{
+            uri: item?.image,
+          }}
+          style={styles.postImageStyles}
+        />
+      </View>
+      <Text style={styles.captionContainer}>
+        <Text style={styles.captionTextStyle}>{item?.User.userName}</Text>{' '}
+        {item?.caption}
+      </Text>
+      <View style={styles.partitionStyle} />
+      <View style={styles.iconWrapper}>
+        <Icon
+          name={like ? 'heart-sharp' : 'heart-outline'}
+          size={30}
+          style={{marginLeft: 5}}
+          color={COLORS.primary}
+          onPress={() => {
+            console.log('like button pressed');
+            // if (isLiked === 'heart-outline') {
+            //   isLiked = 'heart-sharp';
+            // } else {
+            //   isLiked = 'heart-outline';
+            // }
+            setLike(!like);
+          }}
+        />
+        <Icon
+          name="ios-chatbubble-outline"
+          size={30}
+          style={{marginLeft: 10}}
+          color={COLORS.primary}
+          onPress={() => {
+            console.log('comment button pressed');
+          }}
+        />
+      </View>
+      <View style={{paddingHorizontal: 15}}>
+        <Text>
+          Liked by{' '}
+          {like ? `you and ${item?.likeCount} ` : `${item?.likeCount} `}
+          others
+        </Text>
+
+        <Text style={styles.commentTextStyle}>
+          View all {item?.commentCount} comments
+        </Text>
+        <View style={styles.profileInCommentStyle}>
+          <View style={styles.profileContainerWrapper}>
+            <Image
+              source={{
+                uri: item?.User.image,
+              }}
+              style={styles.profileImageInCommentStyle}
+            />
+            <TextInput
+              placeholder="Add a comment "
+              style={styles.commentTextStyle}
+              value={comment}
+              onChangeText={data => {
+                setComment(data);
+              }}
+            />
+          </View>
+          <View style={styles.iconContainer}>
+            <Icon
+              size={25}
+              color={COLORS.primary}
+              name="send"
+              onPress={() => {
+                console.log('send comment pressed');
+              }}
+            />
           </View>
         </View>
       </View>
@@ -108,59 +157,62 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     flexDirection: 'row',
+    flex: 1,
     padding: 5,
   },
+  postImageContainer: {
+    alignItems: 'center',
+  },
+  captionTextStyle: {fontWeight: 'bold'},
   captionContainer: {
     margin: 5,
     color: '#333',
-    fontSize: 12,
+    fontSize: 14,
     padding: 5,
   },
-  likeAndCommentContainer: {paddingHorizontal: 15},
-  sendIconContainer: {flexDirection: 'row', alignItems: 'center'},
-  partitionStyle: {height: 2, width: '100%', backgroundColor: '#cccc'},
-  mainContainerStyles: {
-    padding: 10,
-    borderRadius: 10,
-    elevation: 10,
-    // shadowOffset: {width: 0, height: 1},
-    shadowColor: '#333',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-  },
-  userHeaderWrapper: {
-    backgroundColor: 'white',
-    height: 60,
-    borderRadius: 15,
-    marginTop: 10,
-  },
-  addCommentContainer: {
-    // flex: 1,
-    // width: '100%',
-    marginVertical: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#cccc',
-  },
-  userImageWrapper: {
-    // marginTop: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  imageStyle: {
-    width: 35,
-    height: 35,
-    borderRadius: 100,
-  },
-  mainImageStyles: {width: '100%', height: '60%'},
-  commentProfileStyles: {
+  commentTextStyle: {opacity: 0.5},
+  profileImageInCommentStyle: {
     width: 25,
     height: 25,
     borderRadius: 100,
     backgroundColor: 'orange',
     marginRight: 10,
   },
+  partitionStyle: {height: 2, width: '100%', backgroundColor: COLORS.primary},
+  postImageStyles: {height: 400, width: '98%'},
+  itemContainerWrapper: {
+    margin: 12,
+    padding: 10,
+    borderRadius: 7,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    // elevation: 10,
+    // shadowOffset: {width: 0, height: 1},
+    // shadowColor: '#333',
+    // shadowOpacity: 0.9,
+    // shadowRadius: 1,
+    // backgroundColor: 'white',
+    // elevation: 2,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 1},
+    // shadowOpacity: 0.5,
+    // shadowRadius: 1,
+  },
+  profileContainerWrapper: {flexDirection: 'row', alignItems: 'center'},
+  profileInCommentStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  itemContainer: {
+    // flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  textContainer: {
+    marginLeft: 10,
+  },
+  commentTextStyle: {opacity: 0.4, paddingVertical: 2},
+  userProfileImageStyles: {height: 50, width: 50, borderRadius: 50},
 });

@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Image,
+  Pressable,
+} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
@@ -31,12 +38,12 @@ const BottomTabView = ({id}) => {
 
   const getUserPosts = async () => {
     const url = `${GET_SELF_POSTS}${id}`;
-    console.log(url);
+    console.log('url in getUserPosts of bottomtabView', url);
     const data = await axios
       .get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          // 'Content-Type': 'multipart/form-data',
         },
       })
       .catch(err => {
@@ -51,6 +58,7 @@ const BottomTabView = ({id}) => {
 
   let squares = [];
   let numberOfSquare = postdata?.posts?.length;
+  // let profileImage = postdata?.posts[index]?.image;
   // console.log(
   //   '------------------------------------------------this is post data in bottom view',
   //   postdata,
@@ -58,25 +66,32 @@ const BottomTabView = ({id}) => {
 
   for (let index = 0; index < numberOfSquare; index++) {
     squares.push(
-      <View key={index}>
-        <View
-          style={{
-            width: 130,
-            height: 150,
-            marginVertical: 0.5,
-            backgroundColor: '#cccc',
-            opacity: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+      <View key={postdata?.posts[index]?.id}>
+        <Pressable
+          onPress={() => {
+            let postId = postdata?.posts[index]?.id;
+            console.log('this is post id in bottomtabview', postId);
+            navigation.navigate('DisplayImage', {postId: postId});
           }}>
-          <Image
-            source={{uri: postdata?.posts[index]?.image}}
+          <View
             style={{
-              height: 145,
-              width: 125,
-            }}
-          />
-        </View>
+              width: 130,
+              height: 150,
+              marginVertical: 0.5,
+              backgroundColor: '#cccc',
+              opacity: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={{uri: postdata?.posts[index]?.image}}
+              style={{
+                height: 145,
+                width: 125,
+              }}
+            />
+          </View>
+        </Pressable>
       </View>,
     );
   }

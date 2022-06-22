@@ -6,29 +6,35 @@ import MainStack from './MainStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 import {useSelector, useDispatch} from 'react-redux';
+import {setUserToken} from '../store/actions/index';
 
 export default function Navigation() {
-  // const [isUserLoggedin, setIsUserLoggedin] = useState();
+  const dispatch = useDispatch();
+  // const [isUserLoggedin, setIsUserLoggedin] = useState(null);
   let isUserLoggedin;
-  isUserLoggedin = useSelector(state => {
+  let tokenfromAsync = useSelector(state => {
     return state.user.user.token;
   });
-  // const getTokenFromAsync = async () => {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem('userToken');
-  //     setIsUserLoggedin(jsonValue != null ? JSON.parse(jsonValue) : null);
-  //     console.log(
-  //       'in navigation after getting token from async',
-  //       isUserLoggedin,
-  //     );
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
+  isUserLoggedin = tokenfromAsync;
   useEffect(() => {
-    // getTokenFromAsync();
-  }, []);
+    if (tokenfromAsync === null) getTokenFromAsync();
+  }, [tokenfromAsync]);
+  // if (tokenfromAsync !== null) {
+  //   setIsUserLoggedin(tokenfromAsync);
+  // }
+  const getTokenFromAsync = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('userToken');
+      isUserLoggedin = jsonValue != null ? JSON.parse(jsonValue) : null;
+      console.log(
+        'in navigation after getting token from async',
+        isUserLoggedin,
+        dispatch(setUserToken({isUserLoggedin})),
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // let token = useSelector(state => state.user.token);
   // const [data, setData] = useState(null);
@@ -47,7 +53,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-      {isUserLoggedin ? <MainStack /> : <AuthStack />}
+      {isUserLoggedin !== null ? <MainStack /> : <AuthStack />}
       {/* <MainStack /> */}
     </NavigationContainer>
   );

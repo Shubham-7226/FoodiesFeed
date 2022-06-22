@@ -5,17 +5,30 @@ import CustomButton from '../../components/CustomButton';
 
 const OnBoardScreen = ({navigation}) => {
   return (
-    <View style={{flex: 1, backgroundColor: COLORS.white}}>
-      <View style={{height: 400}}>
+    <View style={{flex: 1, backgroundColor: '#ccc'}}>
+      <View style={{height: 400, alignItems: 'center'}}>
         <Image
           style={{
-            // width: 400,
-            height: 400,
+            width: '90%',
+            height: 150,
             resizeMode: 'contain',
+
             // top: -150,
           }}
           source={{
-            uri: 'https://img.freepik.com/free-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000',
+            uri: 'https://mag.foodiesfeed.com/wp-content/uploads/2018/05/foodiesfeed-mag-w@x2.png',
+          }}
+        />
+        <Image
+          style={{
+            width: '100%',
+            height: 250,
+            // resizeMode: 'contain',
+
+            // top: -150,
+          }}
+          source={{
+            uri: 'https://media.istockphoto.com/photos/bakery-chef-prepare-pizza-picture-id1291299956?b=1&k=20&m=1291299956&s=170667a&w=0&h=Ys_FLtdY0Uzc7yTQl6JzvCHTQ3eRAuqNNU4x8EX1FB8=',
           }}
         />
       </View>

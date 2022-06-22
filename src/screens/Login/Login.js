@@ -15,9 +15,7 @@ import {loginUser} from '../../store/actions';
 import {LOGIN} from '../../utils/url';
 import COLORS from '../../constants/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomActivityIndicator from '../../components/CustomActivityIndicator';
 
-import * as Keychain from 'react-native-keychain';
 export default function Login({navigation}) {
   // const userDetail = useSelector(state => state.user.user);
   // console.log('in Login After userSelector', userDetail);
@@ -46,23 +44,15 @@ export default function Login({navigation}) {
     navigation.navigate('Signup');
   }
 
-  // const saveData = async token => {
-  //   try {
-  //     await AsyncStorage.setItem('token', token);
-  //     alert('Data successfully saved');
-  //   } catch (e) {
-  //     alert('Failed to save the data to the storage');
-  //   }
-  // };
-  // const storeTokenTOAsync = async token => {
-  //   try {
-  //     console.log('storing token in async', token);
-  //     const jsonValue = JSON.stringify(token);
-  //     await AsyncStorage.setItem('userToken', jsonValue);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+  const storeTokenTOAsync = async token => {
+    try {
+      console.log('storing token in async', token);
+      const jsonValue = JSON.stringify(token);
+      await AsyncStorage.setItem('userToken', jsonValue);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const onLogin = async () => {
     if (input.email === '' || input.password === '') {
@@ -79,7 +69,7 @@ export default function Login({navigation}) {
         password: password,
       })
       .then(res => {
-        console.log('this is token', res.data.data.user.image);
+        // console.log('this is token', res.data.data.user.image);
         // setUserToken(res.data.data.authenticate);
         let userToken = res.data.data.authenticate;
         // storeTokenTOAsync(userToken);

@@ -16,6 +16,7 @@ export default function CustomTextInput({
         {label}
       </Text>
       <TextInput
+        autoCapitalize="none"
         value={value}
         placeholder={placeholder}
         onChangeText={onChangeText}

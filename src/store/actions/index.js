@@ -3,25 +3,33 @@ export const SET_USER_REGISTER = 'SET_USER_REGISTER';
 export const SET_USER_LOG_OUT = 'SET_USER_LOG_OUT';
 export const SET_USER_IMAGE = 'SET_USER_IMAGE';
 export const GET_USER_INFO = 'GET_USER_INFO';
+export const SET_USER_TOKEN = 'SET_USER_TOKEN';
 
 export const loginUser = ({input, userToken, userImage, userId}) => {
-  console.log('in action', userToken);
+  console.log('in action login', userToken);
   return {
     type: 'SET_USER_LOGIN',
     payload: {input, userImage, userId},
     token: userToken,
   };
 };
-export const getUserInfo = ({userToken, userImage, userId}) => {
-  console.log('in action', userToken);
+export const setUserToken = ({isUserLoggedin}) => {
+  console.log('in action set usertoken', isUserLoggedin);
+  return {
+    type: 'SET_USER_TOKEN',
+    token: isUserLoggedin,
+  };
+};
+export const getUserInfo = ({userToken, image, userId}) => {
+  console.log('in action get user info', userToken);
   return {
     type: 'GET_USER_INFO',
-    payload: {userImage, userId},
+    payload: {image, userId},
     token: userToken,
   };
 };
 export const registerUser = ({input, userToken, userImage, userId}) => {
-  console.log('in action', userToken);
+  console.log('in action register user', userToken);
   return {
     type: 'SET_USER_REGISTER',
     payload: input,

@@ -11,9 +11,14 @@ import COLORS from '../constants/colors';
 import Status from '../components/Status';
 import EditProfile from '../components/EditProfile';
 import DisplayImage from '../components/DisplayImage';
+import BottomTabView from '../components/BottomTabView';
 import SearchContent from '../components/SearchContent';
 import ChangePassword from '../screens/ChangePassword/ChangePassword';
 import {ProfileBody} from '../components/ProfileBody';
+import SearchBox from '../components/SearchBox';
+import ShowSearchedUsers from '../components/ShowSearchedUsers';
+import FollowingUsers from '../screens/FollowingUsers/FollowingUsers';
+import OtherUserProfile from '../screens/OtherUserProfile/OtherUserProfile';
 // import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
 function MainStack() {
   const Tab = createBottomTabNavigator();
@@ -68,25 +73,58 @@ function MainStack() {
         }}>
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen
+          name="FollowingUsers"
+          component={FollowingUsers}
+          options={({route}) => ({title: route.params.name, headerShown: true})}
+        />
         <Stack.Screen name="ProfileBody" component={ProfileBody} />
+        <Stack.Screen name="BottomTabView" component={BottomTabView} />
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
+        <Stack.Screen name="DisplayImage" component={DisplayImage} />
       </Stack.Navigator>
     );
   }
+
   function SearchUserStack() {
     return (
       <Stack.Navigator
-      // screenOptions={{
-      //   headerShown: false,
-      // }}
-      >
+        screenOptions={{
+          headerShown: true,
+        }}>
         <Stack.Screen
           name="SearchUser"
           component={SearchUser}
           options={{headerShown: false}}
+          // options={{unmountOnBlur: true}}
         />
-        <Stack.Screen name="SearchContent" component={SearchContent} />
-        <Stack.Screen name="DisplayImage" component={DisplayImage} />
+        <Stack.Screen
+          name="SearchBox"
+          component={SearchBox}
+          // options={{unmountOnBlur: true}}
+        />
+        <Stack.Screen
+          name="ShowSearchedUsers"
+          component={ShowSearchedUsers}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="OtherUserProfile"
+          component={OtherUserProfile}
+          options={{headerShown: false}}
+
+          // options={{headerShown: true, title: ''}}
+        />
+        <Stack.Screen
+          name="FollowingUsers"
+          component={FollowingUsers}
+          options={({route}) => ({title: route.params.name, headerShown: true})}
+        />
+        <Stack.Screen
+          name="DisplayImage"
+          component={DisplayImage}
+          options={{headerShown: true}}
+        />
       </Stack.Navigator>
     );
   }

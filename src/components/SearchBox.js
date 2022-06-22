@@ -1,16 +1,53 @@
-import React from 'react';
-import {View, TextInput, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TextInput, StyleSheet, Pressable} from 'react-native';
 import Ionic from 'react-native-vector-icons/Ionicons';
+import {SEARCH_USER} from '../utils/url';
+import {useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
 
-const SearchBox = () => {
+const SearchBox = ({setSearchedData}) => {
+  const navigation = useNavigation();
+  const userToken = useSelector(state => state.user.user.token);
+
+  const [searchText, setSearchText] = useState('');
+  let responseData;
+  // const [users, setUsers] = useState();
+  const getSearchUser = async () => {
+    console.log(SEARCH_USER);
+    data = await axios.get(`${SEARCH_USER}${searchText}`, {
+      headers: {
+        // 'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    console.log('in searchBox after api call', data?.data?.data.users);
+    responseData = data?.data?.data.users;
+    setSearchedData(responseData);
+    console.log('after api call search box', responseData);
+  };
+  // useEffect(
+  //   searchText => {
+  //     if (searchText == '') {
+  //       setSearchedData([]);
+  //     }
+  //   },
+  //   [navigation],
+  // );
+
   return (
     <View style={styles.searchContainer}>
-      <Ionic name="search" style={styles.iconStyles} />
       <TextInput
         placeholder="Search"
         placeholderTextColor="#909090"
         style={styles.textInputContainer}
+        value={searchText}
+        onChangeText={text => setSearchText(text)}
       />
+      <Pressable style={styles.iconContainer} onPress={getSearchUser}>
+        <Ionic name="search" style={styles.iconStyles} />
+      </Pressable>
     </View>
   );
 };
@@ -23,21 +60,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 15,
     padding: 4,
-    paddingLeft: 40,
+    paddingLeft: 20,
+  },
+  iconContainer: {
+    position: 'absolute',
+    zIndex: 1,
+    right: 30,
   },
   iconStyles: {
     fontSize: 18,
     opacity: 0.7,
-    position: 'absolute',
-    zIndex: 1,
-    left: 25,
   },
   searchContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     paddingVertical: 10,
-    position: 'relative',
+    // position: 'relative',
   },
 });
 

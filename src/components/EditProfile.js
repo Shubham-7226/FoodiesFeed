@@ -73,10 +73,10 @@ const EditProfile = ({route, navigation}) => {
   function photoFromCameraHandler() {
     setModalVisible(!isModalVisible);
     ImagePicker.openCamera({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
+      compressImageMaxWidth: 400,
+      compressImageMaxHeight: 400,
       cropping: true,
-      compressImageQuality: 0.8,
+      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -92,10 +92,10 @@ const EditProfile = ({route, navigation}) => {
   function photoFromGalleryHandler() {
     setModalVisible(!isModalVisible);
     ImagePicker.openPicker({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
+      compressImageMaxWidth: 400,
+      compressImageMaxHeight: 400,
       cropping: true,
-      compressImageQuality: 0.8,
+      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -148,7 +148,13 @@ const EditProfile = ({route, navigation}) => {
         </Pressable>
       </View>
       <Pressable onPress={addPostButtonEventHandler}>
-        <View style={{padding: 20, alignItems: 'center'}}>
+        <View
+          style={{
+            padding: 20,
+            alignItems: 'center',
+            borderBottomWidth: 1,
+            borderColor: '#ccc',
+          }}>
           <Image
             source={{
               uri: image

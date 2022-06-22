@@ -26,11 +26,20 @@ export default function Signup({navigation}) {
   // const [userToken, setUserToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  // const storeTokenTOAsync = async token => {
+  //   try {
+  //     console.log('storing token in async', token);
+  //     const jsonValue = JSON.stringify(token);
+  //     await AsyncStorage.setItem('userToken', jsonValue);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   // const userDetail = useSelector(state => state.user.user);
   // console.log('After userSelector', userDetail);
   //console.log(registerd);
-  const dispatch = useDispatch();
   const inputHandler = (inputidentifier, enteredData) => {
     setInput(input => {
       return {
@@ -66,10 +75,11 @@ export default function Signup({navigation}) {
         setErrorMessage('');
         let userToken = res.data.data.authenticate;
         console.log('user token before dispatch', userToken);
+        // storeTokenTOAsync(userToken);
         setIsLoading(false);
         let userImage = res.data.data.user.image;
         let userId = res.data.data.user.id;
-        dispatch(loginUser({input, userToken, userImage, userId}));
+        dispatch(registerUser({input, userToken, userImage, userId}));
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);

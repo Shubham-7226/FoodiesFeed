@@ -1,4 +1,4 @@
-export const API_URL = 'https://d311-103-240-35-190.ngrok.io';
+export const API_URL = 'https://7e1f-103-240-35-190.ngrok.io';
 
 export const REGISTER = `${API_URL}/users`;
 export const GET_USER = `${API_URL}/users/self`;
@@ -11,3 +11,8 @@ export const FORGOT_PASSWORD = `${API_URL}/forgot-password`;
 export const CHANGE_PASSWORD = `${API_URL}/change-password`;
 export const GET_SELF_POSTS = `${API_URL}/posts/users/`;
 export const GET_FOLLOWING_POSTS = `${API_URL}/posts/user/following`;
+export const GET_SINGLE_POST = `${API_URL}/posts/`;
+export const SEARCH_USER = `${API_URL}/search/users?user=`;
+export const GET_USER_FOLLOWERS = `${API_URL}/users/`;
+export const GET_USER_FOLLOWINGS = `${API_URL}/users/`;
+export const GET_SEARCHED_USER = `${API_URL}/users/`;

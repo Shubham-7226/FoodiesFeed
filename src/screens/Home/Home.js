@@ -10,42 +10,50 @@ import axios from 'axios';
 import {GET_USER} from '../../utils/url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getUserInfo} from '../../store/actions';
+import COLORS from '../../constants/colors';
 
 export default function Home({navigation}) {
-  const [isUserLoggedin, setIsUserLoggedin] = useState();
-
+  const dispatch = useDispatch();
+  const userToken = useSelector(state => state.user.user.token);
+  console.log('in home after selector', userToken);
+  // const [isUserLoggedin, setIsUserLoggedin] = useState();
+  // useEffect(() => {
+  //   getTokenFromAsync();
+  //   getUser();
+  // }, [isUserLoggedin]);
+  useEffect(() => {
+    getUser();
+  }, []);
   // const getTokenFromAsync = async () => {
   //   try {
   //     const jsonValue = await AsyncStorage.getItem('userToken');
   //     setIsUserLoggedin(jsonValue != null ? JSON.parse(jsonValue) : null);
-  //     console.log(
-  //       'in navigation after getting token from async',
-  //       isUserLoggedin,
-  //     );
+  //     console.log('in home after getting token from async', isUserLoggedin);
   //   } catch (e) {
   //     console.log(e);
   //   }
   // };
 
-  // useEffect(() => {
-  //   getTokenFromAsync();
-  //   getUser();
-  // }, []);
-  // const getUser = async () => {
-  //   if (isUserLoggedin !== null) {
-  //     data = await axios.get(GET_USER, {
-  //       headers: {
-  //         Authorization: `Bearer ${isUserLoggedin}`,
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     console.log('in profile after api call', data?.data?.data);
-  //     let user = data?.data?.data;
-  //     let image = user.image;
-  //     let userId = user.id;
-  //     dispatch(getUserInfo({isUserLoggedin, image, userId}));
-  //   }
-  // };
+  const getUser = async () => {
+    if (userToken !== null) {
+      data = await axios.get(GET_USER, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          // 'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('in home after api call', data?.data?.data);
+      let user = data?.data?.data;
+      let image = user.image;
+      let userId = user.id;
+      console.log('in home token', userToken);
+      console.log('in home image', image);
+      console.log('in home userId', userId);
+
+      dispatch(getUserInfo({userToken, image, userId}));
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -53,15 +61,9 @@ export default function Home({navigation}) {
         barStyle="dark-content"
         animated={true}
       />
-      <View style={styles.logoContainer}>
+      <View style={styles.mainLogoContainer}>
         {/* <FontAwesome name="plus-square-o" style={{fontSize: 24}} /> */}
-        <Text
-          style={{
-            fontSize: 25,
-            fontWeight: '500',
-          }}>
-          FoodiesFeed
-        </Text>
+        <Text style={styles.logoContainer}>FoodiesFeed</Text>
         {/* <Feather name="navigation" style={{fontSize: 24}} /> */}
       </View>
       <Stories />
@@ -80,6 +82,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     padding: 5,
+  },
+  mainLogoContainer: {
+    fontSize: 25,
+    fontWeight: '500',
+    color: COLORS.primary,
   },
   captionContainer: {
     margin: 5,

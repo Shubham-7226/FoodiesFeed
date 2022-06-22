@@ -27,7 +27,7 @@ export default function Logout({navigation}) {
       .then(res => {
         console.log('-----------------------', res.data);
         dispatch(logoutUser());
-        console.log('logout sucess');
+        console.log('logout success');
       })
       .catch(err => {
         console.log(err.response.data);
