@@ -1,7 +1,5 @@
 import {StyleSheet, Text, View, Pressable} from 'react-native';
 import React from 'react';
-import COLORS from '../constants/colors';
-
 export default function CustomButton({
   title,
   onPress,
@@ -26,7 +24,6 @@ const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: 'COLORS.primary',
     height: 48,
-    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -35,6 +32,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    // textAlign: 'center',
   },
 });

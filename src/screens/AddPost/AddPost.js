@@ -100,7 +100,9 @@ export default function AddPost({navigation}) {
       })
       .then(res => {
         console.log('response while adding post', res.data.data);
+        TostMessage();
         setIsLoading(false);
+        navigation.navigate('ProfileStack');
       })
       .catch(err => {
         console.log(
@@ -246,8 +248,6 @@ export default function AddPost({navigation}) {
         customStyle={{margin: 12}}
         onPress={() => {
           postButtonHandler();
-          TostMessage();
-
           setImage('');
           setCaption('');
         }}

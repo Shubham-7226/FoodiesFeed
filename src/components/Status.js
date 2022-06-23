@@ -14,7 +14,8 @@ import Feather from 'react-native-vector-icons/Feather';
 
 const Status = ({route, navigation}) => {
   const {name} = route.params;
-  const {image} = route.params;
+  const {profileImage} = route.params;
+  const {storyImage} = route.params;
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -49,7 +50,7 @@ const Status = ({route, navigation}) => {
       </View>
       <View style={styles.mainStatusHaderContainer}>
         <View style={styles.imageWrapperContainer}>
-          <Image source={{uri: image}} style={styles.imageStyle} />
+          <Image source={{uri: profileImage}} style={styles.imageStyle} />
         </View>
         <View style={styles.statusHaderContainer}>
           <Text style={styles.inStatusTextContainer}>{name}</Text>
@@ -62,7 +63,7 @@ const Status = ({route, navigation}) => {
         </View>
       </View>
       <Image
-        source={{uri: image}}
+        source={{uri: storyImage}}
         style={{position: 'absolute', width: '100%', height: 600}}
       />
       {/* <View

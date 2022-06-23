@@ -15,13 +15,18 @@ const SearchBox = ({setSearchedData}) => {
   // const [users, setUsers] = useState();
   const getSearchUser = async () => {
     console.log(SEARCH_USER);
-    data = await axios.get(`${SEARCH_USER}${searchText}`, {
-      headers: {
-        // 'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${userToken}`,
-      },
-    });
-
+    data = await axios
+      .get(`${SEARCH_USER}${searchText}`, {
+        headers: {
+          // 'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+        // setErrorMessage(err.response.data.errorMessage);
+        // setIsLoading(false);
+      });
     console.log('in searchBox after api call', data?.data?.data.users);
     responseData = data?.data?.data.users;
     setSearchedData(responseData);
@@ -42,6 +47,7 @@ const SearchBox = ({setSearchedData}) => {
         placeholder="Search"
         placeholderTextColor="#909090"
         style={styles.textInputContainer}
+        returnKeyType="done"
         value={searchText}
         onChangeText={text => setSearchText(text)}
       />

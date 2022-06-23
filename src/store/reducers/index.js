@@ -8,6 +8,7 @@ import {
   SET_USER_IMAGE,
   GET_USER_INFO,
   SET_USER_TOKEN,
+  GET_OTHER_USER,
 } from '../actions/index';
 
 const initialState = {
@@ -18,6 +19,10 @@ const initialState = {
     token: null,
     image: '',
     userId: '',
+  },
+  otherUser: {
+    followers: 0,
+    followings: 0,
   },
 };
 
@@ -113,6 +118,16 @@ const userReducer = (state = initialState, action) => {
           userId: '',
         },
       };
+
+    case GET_OTHER_USER: {
+      return {
+        ...state,
+        otherUser: {
+          followers: action.payload.followers,
+          followings: action.payload.followings,
+        },
+      };
+    }
 
     default:
       return state;

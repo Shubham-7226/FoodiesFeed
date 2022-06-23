@@ -19,6 +19,7 @@ import SearchBox from '../components/SearchBox';
 import ShowSearchedUsers from '../components/ShowSearchedUsers';
 import FollowingUsers from '../screens/FollowingUsers/FollowingUsers';
 import OtherUserProfile from '../screens/OtherUserProfile/OtherUserProfile';
+import Comments from '../components/Comments';
 // import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
 function MainStack() {
   const Tab = createBottomTabNavigator();
@@ -81,7 +82,16 @@ function MainStack() {
         <Stack.Screen name="ProfileBody" component={ProfileBody} />
         <Stack.Screen name="BottomTabView" component={BottomTabView} />
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        <Stack.Screen name="DisplayImage" component={DisplayImage} />
+        <Stack.Screen
+          name="Comments"
+          component={Comments}
+          options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="DisplayImage"
+          component={DisplayImage}
+          options={{title: 'Posts', headerShown: true}}
+        />
       </Stack.Navigator>
     );
   }
@@ -116,6 +126,11 @@ function MainStack() {
           // options={{headerShown: true, title: ''}}
         />
         <Stack.Screen
+          name="Comments"
+          component={Comments}
+          options={{headerShown: true}}
+        />
+        <Stack.Screen
           name="FollowingUsers"
           component={FollowingUsers}
           options={({route}) => ({title: route.params.name, headerShown: true})}
@@ -135,6 +150,11 @@ function MainStack() {
         headerShown: false,
       }}>
       <Stack.Screen name="Home" component={BottomTabScreen} />
+      <Stack.Screen
+        name="Comments"
+        component={Comments}
+        options={{headerShown: true}}
+      />
       <Stack.Screen name="Status" component={Status} />
     </Stack.Navigator>
   );

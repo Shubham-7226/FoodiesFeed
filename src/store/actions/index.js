@@ -4,6 +4,7 @@ export const SET_USER_LOG_OUT = 'SET_USER_LOG_OUT';
 export const SET_USER_IMAGE = 'SET_USER_IMAGE';
 export const GET_USER_INFO = 'GET_USER_INFO';
 export const SET_USER_TOKEN = 'SET_USER_TOKEN';
+export const GET_OTHER_USER = 'GET_OTHER_USER';
 
 export const loginUser = ({input, userToken, userImage, userId}) => {
   console.log('in action login', userToken);
@@ -46,4 +47,15 @@ export const logoutUser = () => {
 export const uploadImage = ({image}) => {
   console.log('in action of uploadImage', image);
   return {type: SET_USER_IMAGE, payload: image};
+};
+
+export const getOtherUser = (followers, followings) => {
+  console.log('getOtherUser', followers, followings);
+  return {
+    type: GET_OTHER_USER,
+    payload: {
+      followers: followers,
+      followings: followings,
+    },
+  };
 };

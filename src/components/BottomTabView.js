@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Image,
-  Pressable,
-} from 'react-native';
+import {View, ScrollView, StyleSheet, Image, Pressable} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
@@ -23,16 +16,12 @@ const BottomTabView = ({id}) => {
 
   const dispatch = useDispatch();
   let token = useSelector(state => state.user.user.token);
-  // let user = useSelector(state => state.user.user);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // The screen is focused
       getUserPosts();
-      // Call any action
     });
 
-    // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, []);
 
@@ -43,7 +32,6 @@ const BottomTabView = ({id}) => {
       .get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data',
         },
       })
       .catch(err => {
@@ -51,18 +39,10 @@ const BottomTabView = ({id}) => {
       });
     setPostdata(data?.data?.data);
     console.log('in bottomview after api call', data?.data?.data);
-    // setUser(data?.data?.data);
-    // console.log('-----------------------in useEffect of profile', user);
-    // dispatch(uploadImage({image: user?.image}));
   };
 
   let squares = [];
   let numberOfSquare = postdata?.posts?.length;
-  // let profileImage = postdata?.posts[index]?.image;
-  // console.log(
-  //   '------------------------------------------------this is post data in bottom view',
-  //   postdata,
-  // );
 
   for (let index = 0; index < numberOfSquare; index++) {
     squares.push(
@@ -73,22 +53,10 @@ const BottomTabView = ({id}) => {
             console.log('this is post id in bottomtabview', postId);
             navigation.navigate('DisplayImage', {postId: postId});
           }}>
-          <View
-            style={{
-              width: 130,
-              height: 150,
-              marginVertical: 0.5,
-              backgroundColor: '#cccc',
-              opacity: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.imageContainer}>
             <Image
               source={{uri: postdata?.posts[index]?.image}}
-              style={{
-                height: 145,
-                width: 125,
-              }}
+              style={styles.imageStyles}
             />
           </View>
         </Pressable>
@@ -154,7 +122,19 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     paddingVertical: 5,
-    // justifyContent: 'space-between',
+  },
+  imageStyles: {
+    height: 145,
+    width: 125,
+  },
+  imageContainer: {
+    width: 130,
+    height: 150,
+    marginVertical: 0.5,
+    backgroundColor: '#cccc',
+    opacity: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 export default BottomTabView;

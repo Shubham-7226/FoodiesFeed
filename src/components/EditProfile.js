@@ -24,17 +24,13 @@ const EditProfile = ({route, navigation}) => {
   const {name, accountName, profileImage} = route.params;
   const [isModalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState();
-  // const [oldimage, setOldImage] = useState(profileImage);
   const [isLoading, setIsLoading] = useState(false);
 
   let token = useSelector(state => state.user.user.token);
   const dispatch = useDispatch();
 
-  // console.log('in add post', token);
-
   async function uploadImageToApi() {
     let data = new FormData();
-    // console.log('this is image', response);
     data.append('profilepic', {
       name: image.modificationDate,
       type: image.mime,
@@ -52,23 +48,13 @@ const EditProfile = ({route, navigation}) => {
       .then(res => {
         console.log('response while adding post', res.data.data);
         dispatch(uploadImage({image: image.path}));
-        // setIsLoading(false);
       })
       .catch(err => {
-        // setIsLoading(false);
         console.log(
           'this is error message while posting data in profile',
           err.response.data,
         );
       });
-    // setIsLoading(false);
-
-    // if (image.path == '') {
-    //   Alert.alert('Upload Image', 'Please upload image', [
-    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //   ]);
-    // } else {
-    // }
   }
   function photoFromCameraHandler() {
     setModalVisible(!isModalVisible);
@@ -76,7 +62,6 @@ const EditProfile = ({route, navigation}) => {
       compressImageMaxWidth: 400,
       compressImageMaxHeight: 400,
       cropping: true,
-      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -95,7 +80,6 @@ const EditProfile = ({route, navigation}) => {
       compressImageMaxWidth: 400,
       compressImageMaxHeight: 400,
       cropping: true,
-      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -106,11 +90,8 @@ const EditProfile = ({route, navigation}) => {
       .catch(err => {
         console.log('no image selected');
       });
-    // dispatch(uploadImage(image.path));
   }
   function addPostButtonEventHandler() {
-    // console.log('button Pressed');
-    // navigation.navigate('Home');
     setModalVisible(!isModalVisible);
   }
   const TostMessage = () => {
@@ -130,7 +111,7 @@ const EditProfile = ({route, navigation}) => {
         <Pressable onPress={() => navigation.goBack()}>
           <Ionic name="close-outline" style={{fontSize: 35}} />
         </Pressable>
-        <Text style={{fontSize: 16, fontWeight: 'bold'}}>Edit Profile</Text>
+        <Text style={styles.editProfileTextStyle}>Edit Profile</Text>
         <Pressable
           onPress={() => {
             setIsLoading(true);
@@ -141,20 +122,11 @@ const EditProfile = ({route, navigation}) => {
             TostMessage();
             navigation.navigate('Profile');
           }}>
-          <Ionic
-            name="checkmark"
-            style={{fontSize: 35, color: COLORS.primary}}
-          />
+          <Ionic name="checkmark" style={styles.checkMarkStyle} />
         </Pressable>
       </View>
       <Pressable onPress={addPostButtonEventHandler}>
-        <View
-          style={{
-            padding: 20,
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderColor: '#ccc',
-          }}>
+        <View style={styles.changeProfileCOntainer}>
           <Image
             source={{
               uri: image
@@ -208,15 +180,8 @@ const EditProfile = ({route, navigation}) => {
         style={{
           marginTop: '128%',
           height: '30%',
-          // backgroundColor: '#cccc'
         }}>
         <View style={{flex: 1}}>
-          {/* <Button
-            title="Hide modal"
-            onPress={() => {
-              setModalVisible(!isModalVisible);
-            }}
-          /> */}
           <CustomButton
             title="Take Photo"
             customBackgroundColor={COLORS.primary}
@@ -256,11 +221,18 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'white',
   },
+  editProfileTextStyle: {fontSize: 16, fontWeight: 'bold'},
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 10,
+  },
+  changeProfileCOntainer: {
+    padding: 20,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
   },
   imageStyles: {width: 80, height: 80, borderRadius: 100},
   activityIndicatorStyle: {
@@ -268,6 +240,7 @@ const styles = StyleSheet.create({
     top: '45%',
     left: '45%',
   },
+  checkMarkStyle: {fontSize: 35, color: COLORS.primary},
   inputTextStyles: {
     fontSize: 16,
     borderBottomWidth: 1,
@@ -277,9 +250,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     padding: 10,
     color: COLORS.primary,
-    // borderTopWidth: 1,
-    // borderBottomWidth: 1,
-    // borderColor: '#EFEFEF',
   },
 });
 

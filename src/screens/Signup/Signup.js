@@ -4,6 +4,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomTextInput from '../../components/CustomTextInput';
@@ -90,64 +91,73 @@ export default function Signup({navigation}) {
     // await AsyncStorage.setItem('token', userToken);
   };
   return (
-    <View style={[styles.container]}>
+    <KeyboardAvoidingView behavior={'heght'}>
       <ScrollView style={styles.scrollViewSignup}>
-        <View
-          style={{
-            position: 'absolute',
-            top: '45%',
-            left: '45%',
-            // backgroundColor: 'red',
-          }}>
-          {isLoading ? <ActivityIndicator size="large" color="orange" /> : null}
+        <View style={[styles.container]}>
+          <View
+            style={{
+              position: 'absolute',
+              top: '45%',
+              left: '45%',
+              // backgroundColor: 'red',
+            }}>
+            {isLoading ? (
+              <ActivityIndicator size="large" color="orange" />
+            ) : null}
+          </View>
+          <Text style={styles.errorMessageStyle}>{errorMessage}</Text>
+
+          <CustomTextInput
+            label="Username"
+            placeholder="Username"
+            onChangeText={inputHandler.bind(this, 'username')}
+          />
+          <CustomTextInput
+            label="Name"
+            placeholder="Username"
+            onChangeText={inputHandler.bind(this, 'name')}
+          />
+          <CustomTextInput
+            label="Email"
+            placeholder="Email"
+            onChangeText={inputHandler.bind(this, 'email')}
+          />
+          <CustomTextInput
+            label="DOB"
+            placeholder="MM/DD/YYYY"
+            onChangeText={inputHandler.bind(this, 'dob')}
+          />
+          <CustomTextInput
+            label="Password"
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={inputHandler.bind(this, 'password')}
+          />
+          <View style={styles.buttonContainer}>
+            <CustomButton
+              title="SIGNUP"
+              onPress={onSignup}
+              customBackgroundColor={COLORS.primary}
+            />
+          </View>
         </View>
-        <Text style={styles.errorMessageStyle}>{errorMessage}</Text>
-
-        <CustomTextInput
-          label="Username"
-          placeholder="Username"
-          onChangeText={inputHandler.bind(this, 'username')}
-        />
-        <CustomTextInput
-          label="Name"
-          placeholder="Username"
-          onChangeText={inputHandler.bind(this, 'name')}
-        />
-        <CustomTextInput
-          label="Email"
-          placeholder="Email"
-          onChangeText={inputHandler.bind(this, 'email')}
-        />
-        <CustomTextInput
-          label="DOB"
-          placeholder="MM/DD/YYYY"
-          onChangeText={inputHandler.bind(this, 'dob')}
-        />
-        <CustomTextInput
-          label="Password"
-          placeholder="Password"
-          secureTextEntry={true}
-          onChangeText={inputHandler.bind(this, 'password')}
-        />
-
-        <CustomButton
-          title="SIGNUP"
-          onPress={onSignup}
-          customBackgroundColor={COLORS.primary}
-        />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
     backgroundColor: 'white',
     justifyContent: 'center',
+    // alignItems: 'center',
     // backgroundColor: 'white',
     // borderWidth: 1,
+  },
+  buttonContainer: {
+    marginVertical: 12,
   },
   errorMessageStyle: {
     color: 'red',
@@ -156,7 +166,10 @@ const styles = StyleSheet.create({
   scrollViewSignup: {
     // height: 300,
     // paddingVertical: 40,
-    marginVertical: 25,
+    height: '100%',
+    // flex: 1,
+
+    // marginVertical: 25,
     backgroundColor: 'white',
   },
 });

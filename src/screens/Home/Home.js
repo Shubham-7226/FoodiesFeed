@@ -44,8 +44,8 @@ export default function Home({navigation}) {
       });
       console.log('in home after api call', data?.data?.data);
       let user = data?.data?.data;
-      let image = user.image;
-      let userId = user.id;
+      let image = user?.image;
+      let userId = user?.id;
       console.log('in home token', userToken);
       console.log('in home image', image);
       console.log('in home userId', userId);
@@ -61,9 +61,9 @@ export default function Home({navigation}) {
         barStyle="dark-content"
         animated={true}
       />
-      <View style={styles.mainLogoContainer}>
+      <View style={styles.logoContainer}>
         {/* <FontAwesome name="plus-square-o" style={{fontSize: 24}} /> */}
-        <Text style={styles.logoContainer}>FoodiesFeed</Text>
+        <Text style={styles.mainLogoContainer}>FoodiesFeed</Text>
         {/* <Feather name="navigation" style={{fontSize: 24}} /> */}
       </View>
       <Stories />

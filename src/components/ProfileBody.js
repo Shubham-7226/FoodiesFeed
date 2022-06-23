@@ -1,19 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
+import {View, Text, Image, Pressable, StyleSheet} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import COLORS from '../constants/colors';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Logout from '../screens/Profile/Logout';
-import {GET_USER_FOLLOWERS} from '../utils/url';
+import {FOLLOW_USER, GET_USER_FOLLOWERS, UNFOLLOW_USER} from '../utils/url';
 import {GET_USER_FOLLOWINGS} from '../utils/url';
 // import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
@@ -60,12 +53,18 @@ export const ProfileBody = ({
   const getUserFollowers = async () => {
     const followUrl = `${GET_USER_FOLLOWERS}${userId}/followers`;
     console.log(followUrl);
-    let responsedata = await axios.get(followUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data',
-      },
-    });
+    let responsedata = await axios
+      .get(followUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // 'Content-Type': 'multipart/form-data',
+        },
+      })
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+        // setErrorMessage(err.response.data.errorMessage);
+        // setIsLoading(false);
+      });
     console.log(
       'in profile after api call of followers',
       responsedata?.data?.data.followers,
@@ -76,12 +75,18 @@ export const ProfileBody = ({
   const getUserFollowings = async () => {
     const followingUrl = `${GET_USER_FOLLOWERS}${userId}/following`;
     console.log(followingUrl);
-    let resData = await axios.get(followingUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data',
-      },
-    });
+    let resData = await axios
+      .get(followingUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // 'Content-Type': 'multipart/form-data',
+        },
+      })
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+        // setErrorMessage(err.response.data.errorMessage);
+        // setIsLoading(false);
+      });
     console.log(
       'in profile after api call of followings',
       resData?.data?.data.following,
@@ -94,32 +99,34 @@ export const ProfileBody = ({
 
   return (
     <View>
-      {accountName ? (
-        <View style={styles.accountNameContainer}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: 'bold',
-            }}>
-            {accountName}
-          </Text>
-          {id ? (
+      <View>
+        {id ? (
+          <View style={styles.accountNameContainer}>
+            <Text style={styles.accountNameStyles}>{accountName}</Text>
             <Pressable
               onPress={() => {
                 ButtonEventHandler();
               }}>
-              <Ionic name="menu" style={{fontSize: 35}} />
+              <Ionic name="exit-outline" style={{fontSize: 30}} />
             </Pressable>
-          ) : (
+          </View>
+        ) : (
+          <View style={styles.accountNameContainerOtherUser}>
             <Pressable
               onPress={() => {
                 navigation.pop();
               }}>
-              <Text>Go back</Text>
+              <Ionic
+                name="arrow-back"
+                color={'black'}
+                style={{fontSize: 30, marginHorizontal: 8}}
+              />
             </Pressable>
-          )}
-        </View>
-      ) : null}
+            <Text style={styles.accountNameStyles}>{accountName}</Text>
+          </View>
+        )}
+      </View>
+
       <View style={styles.profileViewContainer}>
         <View
           style={{
@@ -172,14 +179,83 @@ export const ProfileBody = ({
   );
 };
 
-export const ProfileButtons = ({id, name, accountName, profileImage}) => {
+export const ProfileButtons = ({
+  id,
+  name,
+  accountName,
+  profileImage,
+  userId,
+}) => {
   const navigation = useNavigation();
-  const [follow, setFollow] = useState(follow);
+  // console.log('user in profile button', userDetail);
+
+  const status = useSelector(state => {
+    return {
+      follow: state.user.otherUser.followers,
+      followBack: state.user.otherUser.followings,
+    };
+  });
+  console.log('in profilebody status', status);
+  const [follow, setFollow] = useState(!!status.follow);
+  const [followBack, setFollowBack] = useState(!!status.followBack);
+  let token = useSelector(state => state.user.user.token);
+  console.log('in profilebody status follow', follow);
+  console.log('in profilebody status followBack', followBack);
+
+  // console.log('checking follow', follow);
+  // console.log('checking followBack', followBack);
+  const setUserFollow = async () => {
+    let url = `${FOLLOW_USER}${userId}`;
+    console.log('in follow of profilebody ', url);
+    console.log(url);
+    let data = await axios
+      .put(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // 'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+      });
+
+    console.log('in follow after api call of userfollow++++', data?.data?.data);
+  };
+  const setUserUnfollow = async () => {
+    let url = `${UNFOLLOW_USER}${userId}`;
+    console.log('in unfollow of profilebody ', url);
+    console.log(url);
+    let data = await axios
+      .put(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // 'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      .catch(err => {
+        console.log(err.response.data);
+        // setErrorMessage(err.response.data.errorMessage);
+        // setIsLoading(false);
+      });
+    console.log(
+      'in unfollow after api call of userunfollow++++',
+      data?.data?.data,
+    );
+  };
+
   return (
     <>
       {id === 0 ? (
         <View style={styles.editButtonWrapper}>
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               navigation.push('EditProfile', {
                 name: name,
@@ -193,12 +269,20 @@ export const ProfileButtons = ({id, name, accountName, profileImage}) => {
             <View style={styles.editProfileButtonContainer}>
               <Text style={styles.editButtonStyles}>Edit Profile</Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       ) : (
         <View style={styles.buttonWrapper}>
-          <TouchableOpacity
-            onPress={() => setFollow(!follow)}
+          <Pressable
+            onPress={() => {
+              if (follow) {
+                setUserUnfollow();
+                setFollow(!follow);
+              } else {
+                setUserFollow();
+                setFollow(!follow);
+              }
+            }}
             style={{width: '100%'}}>
             <View
               style={[
@@ -209,10 +293,10 @@ export const ProfileButtons = ({id, name, accountName, profileImage}) => {
                 },
               ]}>
               <Text style={{color: follow ? 'black' : 'white'}}>
-                {follow ? 'Following' : 'Follow'}
+                {follow ? 'Unfollow' : followBack ? 'follow Back' : 'follow'}
               </Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       )}
     </>
@@ -227,12 +311,22 @@ const styles = StyleSheet.create({
     // borderColor: '#cccc',
     borderBottomWidth: 1,
     borderRadius: 5,
+    padding: 8,
+  },
+  accountNameContainerOtherUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'space-between',
+    // borderColor: '#cccc',
+    borderBottomWidth: 1,
+    borderRadius: 5,
+    padding: 8,
   },
   profileViewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingVertical: 20,
+    paddingVertical: 8,
   },
   profileImageViewContainer: {
     resizeMode: 'cover',
@@ -252,11 +346,17 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  accountNameStyles: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+
   editProfileButtonContainer: {
     width: '100%',
     height: 35,
     borderRadius: 5,
-    borderColor: 'black',
+    borderColor: COLORS.primary,
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
