@@ -52,7 +52,7 @@ const EditProfile = ({route, navigation}) => {
       .catch(err => {
         console.log(
           'this is error message while posting data in profile',
-          err.response.data,
+          err?.response?.data,
         );
       });
   }

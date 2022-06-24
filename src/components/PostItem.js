@@ -17,12 +17,12 @@ import COLORS from '../constants/colors';
 export default function PostItem({items}) {
   const navigation = useNavigation();
   const [item, setItem] = useState(items);
-  const [like, setLike] = useState(!!item.PostLikes.length);
-  console.log('like in postItem', like);
+  const [like, setLike] = useState(!!item?.PostLikes?.length);
+  // console.log('like in postItem', like);
   const [comment, setComment] = useState('');
   let token = useSelector(state => state.user.user.token);
   const [userToken, setUserToken] = useState(token);
-  console.log('in postItem After userSelectorr', userToken);
+  // console.log('in postItem After userSelectorr', userToken);
   const likeHandler = async postId => {
     let url = `${LIKE_POST}${postId}/like`;
     console.log(url);
@@ -40,7 +40,7 @@ export default function PostItem({items}) {
         console.log(err.response.data);
       });
 
-    console.log('in like after api call of posts', data?.data?.data);
+    // console.log('in like after api call of posts', data?.data?.data);
   };
   const addComment = async postId => {
     let url = `${ADD_COMMENT}${postId}/comments`;

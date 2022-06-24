@@ -1,4 +1,10 @@
-import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  RefreshControl,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
@@ -10,43 +16,71 @@ export default function Posts() {
   const navigation = useNavigation();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+
+  const [nextUrl, setNextUrl] = useState();
+  // const [postdata, setPostdata] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const [posts, setPosts] = useState([]);
   const userToken = useSelector(state => state.user.user.token);
-  console.log('in post After userSelector', userToken);
+  const [count, setCount] = useState(1);
+  // const [lastCount, setLastCount] = useState(1);
 
+  const [totalPages, setTotalPages] = useState(1);
+  console.log('in post After userSelector', userToken);
+  let url;
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getPosts();
-    });
+    // const unsubscribe = navigation.addListener('focus', () => {
+    // setIsLoadingPosts(true);
+    getPosts();
+    // setIsLoadingPosts(false);
+    // });
     console.log('useEffect posts', posts);
-    return unsubscribe;
-  }, [navigation]);
+    // return unsubscribe;
+  }, [count]);
 
   const getPosts = async () => {
+    setIsLoadingPosts(true);
+    // setLastCount(count);
+
     console.log('in getpost of getposts', userToken);
-    console.log(GET_FOLLOWING_POSTS);
+    // if (count === 0) {
+    //   url = GET_FOLLOWING_POSTS;
+    // } else {
+    //   url = nextUrl;
+    // }
+    console.log('+++++++++++++++++++++++++++++++++++++urlis :', url);
     data = await axios
-      .get(GET_FOLLOWING_POSTS, {
+      .get(`${GET_FOLLOWING_POSTS}?page=${count}`, {
         headers: {
           Authorization: `Bearer ${userToken}`,
           // 'Content-Type': 'multipart/form-data',
         },
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
+        setIsLoadingPosts(false);
+
         // setErrorMessage(err.response.data.errorMessage);
         // setIsLoading(false);
       });
+    setIsLoadingPosts(false);
 
     console.log('in posts after api call', data?.data?.data?.posts);
+    setTotalPages(data?.data?.data?.totalPages);
     let postdata = data?.data?.data?.posts;
-    setPosts(postdata);
+    if (count === 1) {
+      setPosts(postdata);
+    } else {
+      setPosts([...posts, ...postdata]);
+    }
+
     console.log('after api call posts', posts);
   };
 
   function FeedItemHandler({item}) {
-    console.log('this is item', item);
+    // console.log('this is item', item);
     // let isLiked = 'heart-outline';
     return (
       <View style={styles.itemContainerWrapper}>
@@ -62,15 +96,51 @@ export default function Posts() {
             refreshing={false}
             onRefresh={() => {
               setIsLoading(true);
-              getPosts();
+              if (count < totalPages) {
+                setCount(1);
+                getPosts();
+                console.log('this is count', count);
+              }
               setIsLoading(false);
             }}
           />
         }
+        ListFooterComponent={
+          isLoadingPosts ? (
+            <ActivityIndicator
+              size={'large'}
+              color="orange"
+              style={styles.activityIndicatorStyle}
+            />
+          ) : null
+        }
+        style={{}}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          if (count < totalPages) {
+            setCount(count + 1);
+
+            console.log('this is count', count);
+          }
+          return (
+            <ActivityIndicator
+              size={'large'}
+              color="orange"
+              style={styles.activityIndicatorStyle}
+            />
+          );
+        }}
         data={posts}
         renderItem={FeedItemHandler}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item?.id}
       />
+      {/* {isLoadingPosts ? (
+        <ActivityIndicator
+          size={'large'}
+          color="orange"
+          style={styles.activityIndicatorStyle}
+        />
+      ) : null} */}
     </View>
   );
 }
@@ -97,5 +167,9 @@ const styles = StyleSheet.create({
     // shadowOffset: {width: 0, height: 1},
     // shadowOpacity: 0.5,
     // shadowRadius: 1,
+  },
+  activityIndicatorStyle: {
+    paddingVertical: 5,
+    // zIndex: 5,
   },
 });

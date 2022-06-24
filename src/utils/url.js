@@ -23,3 +23,5 @@ export const ADD_STORY = `${API_URL}/story`;
 export const GET_FOLLOWING_STORY = `${API_URL}/story/users/following`;
 export const GET_COMMENTS = `${API_URL}/users/post/`;
 export const ADD_COMMENT = `${API_URL}/users/post/`;
+export const WATCH_STORY = `${API_URL}/story/`;
+export const GET_SELF_STORY = `${API_URL}/story/users`;

@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
   ToastAndroid,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton from '../../components/CustomButton';
@@ -123,7 +124,7 @@ export default function AddPost({navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {isLoading ? (
         <ActivityIndicator
           size={'large'}
@@ -252,7 +253,7 @@ export default function AddPost({navigation}) {
           setCaption('');
         }}
       />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 10,
   },
   imagePostStyle: {
-    height: 400,
+    height: 350,
     alignItems: 'flex-end',
   },
 

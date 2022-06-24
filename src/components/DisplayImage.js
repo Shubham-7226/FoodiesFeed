@@ -51,7 +51,7 @@ export default function DisplayImage({route, navigation}) {
         },
       )
       .catch(err => {
-        console.log(err.response.data);
+        console.log(err?.response?.data);
       });
 
     console.log('in add comment after api call of item', data?.data?.data);
@@ -107,7 +107,7 @@ export default function DisplayImage({route, navigation}) {
         },
       )
       .catch(err => {
-        console.log(err.response.data);
+        console.log(err?.response?.data);
       });
 
     console.log('in like after api call of posts', data?.data?.data);

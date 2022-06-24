@@ -23,22 +23,32 @@ import FormData from 'form-data';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
 import COLORS from '../constants/colors';
-import {ADD_STORY, GET_FOLLOWING_STORY} from '../utils/url';
+import {
+  ADD_STORY,
+  GET_FOLLOWING_STORY,
+  GET_SELF_STORY,
+  WATCH_STORY,
+} from '../utils/url';
 const Stories = () => {
   const dispatch = useDispatch();
   let token = useSelector(state => state.user.user.token);
+  const userData = useSelector(state => state.user.user);
   const navigation = useNavigation();
   const [image, setImage] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [story, setStory] = useState([]);
+  const [selfStory, setSelfStory] = useState([]);
+
+  console.log('-----------------Image', userData.image);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      getSelfStory();
       getStory();
     });
     console.log('useEffect story', story);
     return unsubscribe;
-  }, []);
+  }, [navigation, image, selfStory]);
 
   const getStory = async () => {
     console.log('in getStory of getStory', token);
@@ -61,6 +71,25 @@ const Stories = () => {
 
     console.log('after api call story', story);
   };
+  const getSelfStory = async () => {
+    console.log(GET_SELF_STORY);
+    const data = await axios
+      .get(GET_SELF_STORY, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch(err => {
+        console.log(err.response.data.errorMessage);
+      });
+
+    console.log('in self Story after api call', data?.data?.data);
+    let selfStorydata = data?.data?.data;
+    setSelfStory(selfStorydata);
+    console.log('after api call self story', selfStorydata);
+
+    console.log('after api call self story', selfStory);
+  };
 
   async function addStory() {
     let formdata = new FormData();
@@ -80,7 +109,6 @@ const Stories = () => {
       })
       .then(res => {
         console.log('response while adding Story', res.data.data);
-        // setIsLoading(false);
       })
       .catch(err => {
         console.log(
@@ -88,14 +116,30 @@ const Stories = () => {
           err?.response?.data,
         );
       });
-
-    // if (image == '') {
-    //   Alert.alert('Upload Image', 'Please upload image', [
-    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //   ]);
-    // } else {
-    // }
-    // navigation.navigate('Home');
+  }
+  async function setWatchStory(storyId) {
+    let url = `${WATCH_STORY}${storyId}/users/watch`;
+    console.log(url);
+    await axios
+      .put(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // 'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      .then(res => {
+        console.log('response while watching Story', res.data.data);
+      })
+      .catch(err => {
+        console.log(
+          'this is error message while posting data in add Story',
+          err?.response?.data,
+        );
+      });
   }
 
   function photoFromCameraHandler() {
@@ -138,75 +182,125 @@ const Stories = () => {
       });
   }
 
-  // const imageString =
-  //   'https://www.eatthis.com/wp-content/uploads/sites/4/2019/06/deep-dish-pizza-chicago.jpg';
-  // const storyData = [
-  //   {
-  //     id: 1,
-  //     name: 'Your Story',
-  //     image:
-  //       'https://img.traveltriangle.com/blog/wp-content/uploads/2018/12/cover-for-street-food-in-sydney.jpg',
-  //   },
-  //   {
-  //     id: 0,
-  //     name: 'Ram_Charan',
-  //     image: imageString,
-  //   },
-  //   {
-  //     id: 0,
-  //     name: 'The_Groot',
-  //     image:
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDoHP_USX5Zk2GUVJUNZXPAeZec8hnhBzhkQ&usqp=CAU',
-  //   },
-  //   ,
-  //   {
-  //     id: 0,
-  //     name: 'loverland',
-  //     image: imageString,
-  //   },
-  //   ,
-  //   {
-  //     id: 0,
-  //     name: 'chillhouse',
-  //     image: imageString,
-  //   },
-  // ];
-
   return (
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       style={styles.storiesHorizontalContainer}>
+      {selfStory.length !== 0 ? (
+        selfStory?.map((data, index) => {
+          return (
+            <Pressable
+              key={index}
+              onPress={() => {
+                console.log('story pressed');
+
+                let postId = data.id;
+                console.log(postId);
+
+                setWatchStory(postId);
+                navigation.push('Status', {
+                  name: 'You',
+                  profileImage: userData?.image,
+                  storyImage: data?.image,
+                });
+              }}>
+              <View style={styles.createStoryContainer}>
+                <View style={styles.UserStoryContainer}>
+                  <Image
+                    source={{uri: userData?.image}}
+                    style={{
+                      resizeMode: 'cover',
+                      width: '90%',
+                      height: '90%',
+                      borderRadius: 100,
+                      backgroundColor: 'orange',
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 12,
+                    color: 'black',
+                    // opacity: data.id == 0 ? 1 : 0.5,
+                  }}>
+                  {'You'}
+                </Text>
+              </View>
+            </Pressable>
+          );
+        })
+      ) : (
+        <Pressable>
+          <View style={styles.createStoryContainer}>
+            <View style={styles.createStoryIconContainer}>
+              <Pressable
+                onPress={() => {
+                  setModalVisible(!isModalVisible);
+                }}>
+                <Entypo
+                  name="circle-with-plus"
+                  style={{
+                    fontSize: 20,
+                    color: COLORS.primary,
+                    backgroundColor: 'white',
+                    borderRadius: 100,
+                  }}
+                />
+              </Pressable>
+            </View>
+            <View style={styles.SelfNoneUserStoryContainer}>
+              <Image
+                source={{uri: userData?.image}}
+                style={{
+                  resizeMode: 'cover',
+                  width: '90%',
+                  height: '90%',
+                  borderRadius: 100,
+                  backgroundColor: 'orange',
+                }}
+              />
+            </View>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 12,
+                color: 'white',
+                // opacity: data.id == 0 ? 1 : 0.5,
+              }}>
+              {'You'}
+            </Text>
+          </View>
+        </Pressable>
+      )}
+
       {story?.map((data, index) => {
+        let length = data?.StoryWatches?.length;
+        console.log('this is length', length);
         return (
           <Pressable
             key={index}
             onPress={() => {
               console.log('story pressed');
+
+              let postId = data.id;
+              console.log(postId);
+
+              setWatchStory(postId);
               navigation.push('Status', {
-                name: data.name,
+                name: data?.name,
                 profileImage: data?.user?.image,
                 storyImage: data?.image,
               });
             }}>
             <View style={styles.createStoryContainer}>
-              {index === 0 ? (
-                <View style={styles.createStoryIconContainer}>
-                  <Entypo
-                    name="circle-with-plus"
-                    style={{
-                      fontSize: 20,
-                      color: COLORS.primary,
-                      backgroundColor: 'white',
-                      borderRadius: 100,
-                    }}
-                    onPress={() => {
-                      setModalVisible(!isModalVisible);
-                    }}
-                  />
-                </View>
-              ) : null}
-              <View style={styles.UserStoryContainer}>
+              <View
+                style={
+                  length === 0
+                    ? styles.UserStoryContainer
+                    : [styles.UserStoryContainer, {borderColor: '#ccc'}]
+                }>
                 <Image
                   source={{uri: data.image}}
                   style={{
@@ -222,7 +316,7 @@ const Stories = () => {
                 style={{
                   textAlign: 'center',
                   fontSize: 12,
-                  color: 'black',
+                  color: 'white',
                   // opacity: data.id == 0 ? 1 : 0.5,
                 }}>
                 {data?.user?.userName}
@@ -280,6 +374,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     // backgroundColor: 'red',
     maxHeight: 125,
+    // flexDirection: 'row',
   },
   createStoryContainer: {
     flexDirection: 'column',
@@ -299,6 +394,16 @@ const styles = StyleSheet.create({
     borderWidth: 1.8,
     borderRadius: 100,
     borderColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  SelfNoneUserStoryContainer: {
+    width: 68,
+    height: 68,
+    backgroundColor: 'white',
+    // borderWidth: 1.8,
+    borderRadius: 100,
+    // borderColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

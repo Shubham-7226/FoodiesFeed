@@ -61,7 +61,7 @@ function MainStack() {
         <Tab.Screen name="HomeFeed" component={Home} />
         <Tab.Screen name="SearchUserStack" component={SearchUserStack} />
         <Tab.Screen name="AddPost" component={AddPost} />
-        <Tab.Screen name="ChatUser" component={ChatUser} />
+        {/* <Tab.Screen name="ChatUser" component={ChatUser} /> */}
         <Tab.Screen name="ProfileStack" component={ProfileStack} />
       </Tab.Navigator>
     );

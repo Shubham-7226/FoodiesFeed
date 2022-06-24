@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, StyleSheet, Image, Pressable} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Image,
+  Pressable,
+  Text,
+} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
@@ -69,7 +76,13 @@ const BottomTabView = ({id}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.postScrollviewStyle}>
-        <View style={styles.postViewStyle}>{squares}</View>
+        <View style={styles.postViewStyle}>
+          {squares.length !== 0 ? (
+            squares
+          ) : (
+            <Text style={styles.postTextStyle}>no posts found</Text>
+          )}
+        </View>
       </ScrollView>
     );
   };
@@ -79,7 +92,13 @@ const BottomTabView = ({id}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.postScrollviewStyle}>
-        <View style={styles.postViewStyle}>{squares}</View>
+        <View style={styles.postViewStyle}>
+          {squares.length !== 0 ? (
+            squares
+          ) : (
+            <Text style={styles.postTextStyle}>no posts found</Text>
+          )}
+        </View>
       </ScrollView>
     );
   };
@@ -127,11 +146,15 @@ const styles = StyleSheet.create({
     height: 145,
     width: 125,
   },
+  postTextStyle: {
+    fontSize: 20,
+    textAlignVertical: 'center',
+  },
   imageContainer: {
     width: 130,
     height: 150,
     marginVertical: 0.5,
-    backgroundColor: '#cccc',
+    backgroundColor: '#ccc',
     opacity: 1,
     alignItems: 'center',
     justifyContent: 'center',
