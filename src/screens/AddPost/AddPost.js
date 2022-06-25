@@ -33,7 +33,6 @@ export default function AddPost({navigation}) {
 
   const dispatch = useDispatch();
   let token = useSelector(state => state.user.user.token);
-  // console.log('in add post', token);
   let data = new FormData();
   data.append('postImage', {
     name: image.modificationDate,
@@ -49,7 +48,6 @@ export default function AddPost({navigation}) {
       compressImageMaxWidth: 400,
       compressImageMaxHeight: 400,
       cropping: true,
-      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -68,7 +66,6 @@ export default function AddPost({navigation}) {
       compressImageMaxWidth: 400,
       compressImageMaxHeight: 400,
       cropping: true,
-      // compressImageQuality: 0.8,
     })
       .then(response => {
         if (!response.didCancel) {
@@ -82,8 +79,6 @@ export default function AddPost({navigation}) {
   }
 
   function addPostButtonEventHandler() {
-    // console.log('button Pressed');
-    // navigation.navigate('Home');
     setModalVisible(!isModalVisible);
   }
   const TostMessage = () => {
@@ -103,7 +98,7 @@ export default function AddPost({navigation}) {
         console.log('response while adding post', res.data.data);
         TostMessage();
         setIsLoading(false);
-        navigation.navigate('ProfileStack');
+        // navigation.navigate('ProfileStack');
       })
       .catch(err => {
         console.log(
@@ -112,15 +107,12 @@ export default function AddPost({navigation}) {
         );
         setIsLoading(false);
       });
-    // setIsLoading(false);
-
     if (image == '') {
       Alert.alert('Upload Image', 'Please upload image', [
         {text: 'OK', onPress: () => console.log('OK Pressed')},
       ]);
     } else {
     }
-    // navigation.navigate('Home');
   }
 
   return (
@@ -151,7 +143,6 @@ export default function AddPost({navigation}) {
               size={30}
               color={COLORS.primary}
               onPress={() => {
-                // console.log('cancel image  button pressed');
                 setImage('');
               }}
             />
@@ -161,7 +152,6 @@ export default function AddPost({navigation}) {
       <View
         style={{
           flexDirection: 'row',
-          // padding: 10,
           borderWidth: 1,
           borderColor: '#CDCDCD',
           elevation: 3,
@@ -169,9 +159,7 @@ export default function AddPost({navigation}) {
         <Text
           style={{
             fontSize: 16,
-
             marginTop: 8,
-            // backgroundColor: 'red',
           }}>
           Captions:
         </Text>
@@ -180,11 +168,8 @@ export default function AddPost({navigation}) {
           style={{
             textAlignVertical: 'top',
             marginLeft: 8,
-            // backgroundColor: 'red',
             width: '80%',
             fontSize: 16,
-            // borderWidth: 1,
-            // borderColor: '#CDCDCD',
           }}
           multiline={true}
           numberOfLines={5}
@@ -212,15 +197,8 @@ export default function AddPost({navigation}) {
         style={{
           marginTop: '128%',
           height: '30%',
-          // backgroundColor: '#cccc'
         }}>
         <View style={{flex: 1}}>
-          {/* <Button
-            title="Hide modal"
-            onPress={() => {
-              setModalVisible(!isModalVisible);
-            }}
-          /> */}
           <CustomButton
             title="Take Photo"
             customBackgroundColor={COLORS.primary}
@@ -261,10 +239,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    // paddingVertical: 10,
   },
   imagePostStyle: {
-    height: 350,
+    height: 300,
     alignItems: 'flex-end',
   },
 

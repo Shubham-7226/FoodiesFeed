@@ -6,7 +6,6 @@ import {logoutUser} from '../../store/actions/index';
 import COLORS from '../../constants/colors';
 import {LOGOUT, API_URL, GET_USER} from '../../utils/url';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Logout({navigation}) {
   const dispatch = useDispatch();
@@ -46,8 +45,6 @@ export default function Logout({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     width: '40%',
-    // height: 50,
   },
 });

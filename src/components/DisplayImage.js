@@ -2,8 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  StatusBar,
   Image,
   TextInput,
   KeyboardAvoidingView,
@@ -14,7 +12,7 @@ import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import COLORS from '../constants/colors';
 import {ADD_COMMENT, GET_SINGLE_POST} from '../utils/url';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
 import {LIKE_POST} from '../utils/url';
 
@@ -32,7 +30,6 @@ export default function DisplayImage({route, navigation}) {
   console.log(url);
   useEffect(() => {
     getPost();
-    // console.log('length of postlike ', item?.PostLikes.length);
   }, []);
   console.log('like in display image', like);
   const addComment = async postId => {
@@ -147,11 +144,6 @@ export default function DisplayImage({route, navigation}) {
             <Pressable
               onPress={() => {
                 console.log('like button pressed');
-                // if (isLiked === 'heart-outline') {
-                //   isLiked = 'heart-sharp';
-                // } else {
-                //   isLiked = 'heart-outline';
-                // }
                 let postId = item?.id;
                 console.log('this is post id onPress', postId);
                 if (like) {

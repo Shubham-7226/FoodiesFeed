@@ -12,34 +12,22 @@ const SearchBox = ({setSearchedData}) => {
 
   const [searchText, setSearchText] = useState('');
   let responseData;
-  // const [users, setUsers] = useState();
   const getSearchUser = async () => {
     console.log(SEARCH_USER);
     data = await axios
       .get(`${SEARCH_USER}${searchText}`, {
         headers: {
-          // 'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${userToken}`,
         },
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);
-        // setErrorMessage(err.response.data.errorMessage);
-        // setIsLoading(false);
       });
     console.log('in searchBox after api call', data?.data?.data.users);
     responseData = data?.data?.data.users;
     setSearchedData(responseData);
     console.log('after api call search box', responseData);
   };
-  // useEffect(
-  //   searchText => {
-  //     if (searchText == '') {
-  //       setSearchedData([]);
-  //     }
-  //   },
-  //   [navigation],
-  // );
 
   return (
     <View style={styles.searchContainer}>
@@ -82,7 +70,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingVertical: 10,
-    // position: 'relative',
   },
 });
 

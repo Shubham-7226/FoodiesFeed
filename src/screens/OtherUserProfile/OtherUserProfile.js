@@ -12,7 +12,6 @@ const OtherUserProfile = ({route}) => {
   const token = useSelector(state => state.user.user.token);
   const [user, setUser] = useState();
   const {id} = route.params;
-  // let userData;
   console.log('id in other user profile', id);
 
   const dispatch = useDispatch();
@@ -21,31 +20,22 @@ const OtherUserProfile = ({route}) => {
     getSearchedUser();
   }, []);
 
-  // console.log('in profile', token);
-
   const getSearchedUser = async () => {
-    // dispatch(uploadImage({image: user?.image}));
     const url = `${GET_SEARCHED_USER}${id}`;
     console.log(url);
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data',
       },
     });
-    // console.log('in  other user profile after api call', response?.data?.data);
-    // userData = data?.data?.data;
+    setUser(response?.data?.data);
     dispatch(
       getOtherUser(
         response?.data?.data?.Followers?.length,
         response?.data?.data?.Follows?.length,
       ),
     );
-    setUser(response?.data?.data);
   };
-
-  // console.log('in other profile', userData?.Followers.length);
-  // console.log('in other profile', userData?.Follows.length);
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: 'white'}}>
@@ -70,12 +60,10 @@ const OtherUserProfile = ({route}) => {
           follows={user?.Follows.length}
           following={user?.Followers.length}
           userId={id}
-          // profileImage={userDetail}
         />
       </View>
 
       <BottomTabView id={id} />
-      {/* <Logout /> */}
     </View>
   );
 };
@@ -88,8 +76,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     justifyContent: 'center',
-
-    // zIndex: 1,
   },
 });
 

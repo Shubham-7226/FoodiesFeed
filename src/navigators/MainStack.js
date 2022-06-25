@@ -12,7 +12,6 @@ import Status from '../components/Status';
 import EditProfile from '../components/EditProfile';
 import DisplayImage from '../components/DisplayImage';
 import BottomTabView from '../components/BottomTabView';
-import SearchContent from '../components/SearchContent';
 import ChangePassword from '../screens/ChangePassword/ChangePassword';
 import {ProfileBody} from '../components/ProfileBody';
 import SearchBox from '../components/SearchBox';
@@ -20,7 +19,6 @@ import ShowSearchedUsers from '../components/ShowSearchedUsers';
 import FollowingUsers from '../screens/FollowingUsers/FollowingUsers';
 import OtherUserProfile from '../screens/OtherUserProfile/OtherUserProfile';
 import Comments from '../components/Comments';
-// import OnBoardScreen from '../screens/OnBoardScreen/OnBoardScreen';
 function MainStack() {
   const Tab = createBottomTabNavigator();
 
@@ -61,7 +59,7 @@ function MainStack() {
         <Tab.Screen name="HomeFeed" component={Home} />
         <Tab.Screen name="SearchUserStack" component={SearchUserStack} />
         <Tab.Screen name="AddPost" component={AddPost} />
-        {/* <Tab.Screen name="ChatUser" component={ChatUser} /> */}
+        <Tab.Screen name="ChatUser" component={ChatUser} />
         <Tab.Screen name="ProfileStack" component={ProfileStack} />
       </Tab.Navigator>
     );
@@ -106,13 +104,8 @@ function MainStack() {
           name="SearchUser"
           component={SearchUser}
           options={{headerShown: false}}
-          // options={{unmountOnBlur: true}}
         />
-        <Stack.Screen
-          name="SearchBox"
-          component={SearchBox}
-          // options={{unmountOnBlur: true}}
-        />
+        <Stack.Screen name="SearchBox" component={SearchBox} />
         <Stack.Screen
           name="ShowSearchedUsers"
           component={ShowSearchedUsers}
@@ -122,8 +115,6 @@ function MainStack() {
           name="OtherUserProfile"
           component={OtherUserProfile}
           options={{headerShown: false}}
-
-          // options={{headerShown: true, title: ''}}
         />
         <Stack.Screen
           name="Comments"

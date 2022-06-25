@@ -36,19 +36,6 @@ export default function Navigation() {
     }
   };
 
-  // let token = useSelector(state => state.user.token);
-  // const [data, setData] = useState(null);
-  // setData(AsyncStorage.getItem('token'));
-  // console.log(data);
-
-  // isUserLoggedin = async () => {
-  //   try {
-  //     return await AsyncStorage.getItem('token');
-  //     // alert('Data successfully saved');
-  //   } catch (e) {
-  //     alert('Failed to save the data to the storage');
-  //   }
-  // };
   console.log('in navigation checking is user loggedin', isUserLoggedin);
 
   return (

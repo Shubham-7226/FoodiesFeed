@@ -5,8 +5,6 @@ import Signup from '../screens/Signup/Signup';
 import OnBoardScreen from '../screens/OnBoardSCreen/OnBoardScreen';
 import ForgotPassword from '../screens/ForgotPassword/ForgotPassword';
 
-// import {createStackNavigator} from '@react-navigation/stack';
-
 const Stack = createNativeStackNavigator();
 
 export default function AuthStack() {
@@ -16,11 +14,6 @@ export default function AuthStack() {
         screenOptions={{
           headerShown: false,
         }}>
-        {/* <Stack.Screen
-          name="SearchUser"
-          component={SearchUser}
-          options={{headerShown: false}}
-        /> */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       </Stack.Navigator>

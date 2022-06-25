@@ -56,7 +56,6 @@ export default function ChangePassword({navigation}) {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              // 'Content-Type': 'multipart/form-data',
             },
           },
         )
@@ -91,21 +90,18 @@ export default function ChangePassword({navigation}) {
         placeholder="Old Password"
         secureTextEntry={true}
         onChangeText={inputHandler.bind(this, 'oldPassword')}
-        // value={input.password}
       />
       <CustomTextInput
         label="New Password"
         placeholder="New Password"
         secureTextEntry={true}
         onChangeText={inputHandler.bind(this, 'newPassword')}
-        // value={input.password}
       />
       <CustomTextInput
         label="Re-enter New Password"
         placeholder="Re-enterNew Password"
         secureTextEntry={true}
         onChangeText={inputHandler.bind(this, 'reEnteredNewPassword')}
-        // value={input.password}
       />
       <View style={styles.buttonContainer}>
         <CustomButton
@@ -130,7 +126,6 @@ export default function ChangePassword({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
     padding: 10,
     justifyContent: 'center',
   },
@@ -140,7 +135,6 @@ const styles = StyleSheet.create({
     left: '45%',
   },
   buttonContainer: {
-    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
   },

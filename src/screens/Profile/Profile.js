@@ -5,8 +5,6 @@ import BottomTabView from '../../components/BottomTabView';
 import Logout from './Logout';
 import {useSelector, useDispatch} from 'react-redux';
 import {GET_USER} from '../../utils/url';
-import {uploadImage} from '../../store/actions';
-import BottomSheet from 'react-native-simple-bottom-sheet';
 import Modal from 'react-native-modal';
 import axios from 'axios';
 import CustomButton from '../../components/CustomButton';
@@ -25,21 +23,14 @@ const Profile = ({navigation}) => {
   const userIdRedux = useSelector(state => state.user.user.userId);
   console.log('in profile getting user from redux', userIdRedux);
 
-  console.log('+++++++++++++++++++++++++in profile after selector', userDetail);
-
-  // console.log('in profile', token);
-
   const getUser = async () => {
     data = await axios.get(GET_USER, {
       headers: {
         Authorization: `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data',
       },
     });
     console.log('in profile after api call', data?.data?.data);
     setUser(data?.data?.data);
-    // console.log('-----------------------in useEffect of profile', user);
-    // dispatch(uploadImage({image: user?.image}));
   };
 
   useEffect(() => {
@@ -68,7 +59,6 @@ const Profile = ({navigation}) => {
           name={user?.name}
           accountName={user?.userName}
           profileImage={userDetail}
-          // profileImage={userDetail}
         />
       </View>
 
@@ -115,7 +105,6 @@ const Profile = ({navigation}) => {
           </View>
         </View>
       </Modal>
-      {/* <Logout /> */}
     </View>
   );
 };
@@ -128,8 +117,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     justifyContent: 'center',
-
-    // zIndex: 1,
   },
 });
 

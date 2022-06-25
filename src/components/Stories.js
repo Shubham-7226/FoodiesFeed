@@ -6,16 +6,10 @@ import {
   Pressable,
   Image,
   StyleSheet,
-  Button,
-  TextInput,
-  ImageBackground,
-  ActivityIndicator,
-  Alert,
-  ToastAndroid,
+  RefreshControl,
 } from 'react-native';
 import CustomButton from './CustomButton';
 import Modal from 'react-native-modal';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector, useDispatch} from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
@@ -30,6 +24,7 @@ import {
   WATCH_STORY,
 } from '../utils/url';
 const Stories = () => {
+  let selfStorydata;
   const dispatch = useDispatch();
   let token = useSelector(state => state.user.user.token);
   const userData = useSelector(state => state.user.user);
@@ -48,7 +43,7 @@ const Stories = () => {
     });
     console.log('useEffect story', story);
     return unsubscribe;
-  }, [navigation, image, selfStory]);
+  }, [image, selfStorydata, isModalVisible, navigation]);
 
   const getStory = async () => {
     console.log('in getStory of getStory', token);
@@ -57,7 +52,6 @@ const Stories = () => {
       .get(GET_FOLLOWING_STORY, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data',
         },
       })
       .catch(err => {
@@ -84,19 +78,19 @@ const Stories = () => {
       });
 
     console.log('in self Story after api call', data?.data?.data);
-    let selfStorydata = data?.data?.data;
+    selfStorydata = data?.data?.data;
     setSelfStory(selfStorydata);
     console.log('after api call self story', selfStorydata);
 
     console.log('after api call self story', selfStory);
   };
 
-  async function addStory() {
+  async function addStory(storyImage) {
     let formdata = new FormData();
     formdata.append('storyImage', {
-      name: image.modificationDate,
-      type: image.mime,
-      uri: image.path,
+      name: storyImage.modificationDate,
+      type: storyImage.mime,
+      uri: storyImage.path,
     });
     console.log(ADD_STORY);
     console.log('this is form data', formdata);
@@ -127,7 +121,6 @@ const Stories = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // 'Content-Type': 'multipart/form-data',
           },
         },
       )
@@ -153,8 +146,9 @@ const Stories = () => {
       .then(response => {
         if (!response.didCancel) {
           console.log('this is image', response);
+          let storyImage = response;
           setImage(response);
-          addStory();
+          addStory(storyImage);
         }
       })
       .catch(err => {
@@ -173,8 +167,9 @@ const Stories = () => {
       .then(response => {
         if (!response.didCancel) {
           console.log('this is image' + response);
+          let storyImage = response;
           setImage(response);
-          addStory();
+          addStory(storyImage);
         }
       })
       .catch(err => {
@@ -186,7 +181,16 @@ const Stories = () => {
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
-      style={styles.storiesHorizontalContainer}>
+      style={styles.storiesHorizontalContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={false}
+          onRefresh={() => {
+            getSelfStory();
+            getStory();
+          }}
+        />
+      }>
       {selfStory.length !== 0 ? (
         selfStory?.map((data, index) => {
           return (
@@ -208,7 +212,12 @@ const Stories = () => {
               <View style={styles.createStoryContainer}>
                 <View style={styles.UserStoryContainer}>
                   <Image
-                    source={{uri: userData?.image}}
+                    source={{
+                      uri:
+                        userData?.image !== ''
+                          ? userData?.image
+                          : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                    }}
                     style={{
                       resizeMode: 'cover',
                       width: '90%',
@@ -223,7 +232,6 @@ const Stories = () => {
                     textAlign: 'center',
                     fontSize: 12,
                     color: 'black',
-                    // opacity: data.id == 0 ? 1 : 0.5,
                   }}>
                   {'You'}
                 </Text>
@@ -252,7 +260,12 @@ const Stories = () => {
             </View>
             <View style={styles.SelfNoneUserStoryContainer}>
               <Image
-                source={{uri: userData?.image}}
+                source={{
+                  uri:
+                    userData?.image !== ''
+                      ? userData?.image
+                      : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                }}
                 style={{
                   resizeMode: 'cover',
                   width: '90%',
@@ -266,15 +279,13 @@ const Stories = () => {
               style={{
                 textAlign: 'center',
                 fontSize: 12,
-                color: 'white',
-                // opacity: data.id == 0 ? 1 : 0.5,
+                color: 'black',
               }}>
               {'You'}
             </Text>
           </View>
         </Pressable>
       )}
-
       {story?.map((data, index) => {
         let length = data?.StoryWatches?.length;
         console.log('this is length', length);
@@ -289,7 +300,7 @@ const Stories = () => {
 
               setWatchStory(postId);
               navigation.push('Status', {
-                name: data?.name,
+                name: data?.user?.userName,
                 profileImage: data?.user?.image,
                 storyImage: data?.image,
               });
@@ -316,8 +327,7 @@ const Stories = () => {
                 style={{
                   textAlign: 'center',
                   fontSize: 12,
-                  color: 'white',
-                  // opacity: data.id == 0 ? 1 : 0.5,
+                  color: 'black',
                 }}>
                 {data?.user?.userName}
               </Text>
@@ -334,15 +344,8 @@ const Stories = () => {
         style={{
           marginTop: '128%',
           height: '30%',
-          // backgroundColor: '#cccc'
         }}>
         <View style={{flex: 1}}>
-          {/* <Button
-            title="Hide modal"
-            onPress={() => {
-              setModalVisible(!isModalVisible);
-            }}
-          /> */}
           <CustomButton
             title="Take Photo"
             customBackgroundColor={COLORS.primary}
@@ -372,9 +375,7 @@ const Stories = () => {
 const styles = StyleSheet.create({
   storiesHorizontalContainer: {
     paddingVertical: 20,
-    // backgroundColor: 'red',
     maxHeight: 125,
-    // flexDirection: 'row',
   },
   createStoryContainer: {
     flexDirection: 'column',
@@ -401,9 +402,7 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     backgroundColor: 'white',
-    // borderWidth: 1.8,
     borderRadius: 100,
-    // borderColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

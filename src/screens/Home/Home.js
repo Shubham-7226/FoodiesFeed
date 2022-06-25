@@ -1,14 +1,10 @@
 import {StyleSheet, Text, View, StatusBar} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
 import Posts from '../../components/Posts';
 import Stories from '../../components/Stories';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {GET_USER} from '../../utils/url';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getUserInfo} from '../../store/actions';
 import COLORS from '../../constants/colors';
 
@@ -16,30 +12,15 @@ export default function Home({navigation}) {
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.user.user.token);
   console.log('in home after selector', userToken);
-  // const [isUserLoggedin, setIsUserLoggedin] = useState();
-  // useEffect(() => {
-  //   getTokenFromAsync();
-  //   getUser();
-  // }, [isUserLoggedin]);
   useEffect(() => {
     getUser();
   }, []);
-  // const getTokenFromAsync = async () => {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem('userToken');
-  //     setIsUserLoggedin(jsonValue != null ? JSON.parse(jsonValue) : null);
-  //     console.log('in home after getting token from async', isUserLoggedin);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
 
   const getUser = async () => {
     if (userToken !== null) {
       data = await axios.get(GET_USER, {
         headers: {
           Authorization: `Bearer ${userToken}`,
-          // 'Content-Type': 'multipart/form-data',
         },
       });
       console.log('in home after api call', data?.data?.data);
@@ -62,9 +43,7 @@ export default function Home({navigation}) {
         animated={true}
       />
       <View style={styles.logoContainer}>
-        {/* <FontAwesome name="plus-square-o" style={{fontSize: 24}} /> */}
         <Text style={styles.mainLogoContainer}>FoodiesFeed</Text>
-        {/* <Feather name="navigation" style={{fontSize: 24}} /> */}
       </View>
       <Stories />
       <Posts />
@@ -96,7 +75,6 @@ const styles = StyleSheet.create({
   },
   itemContainerWrapper: {
     margin: 10,
-    // padding: 10,
     borderRadius: 10,
     elevation: 10,
     shadowOffset: {width: 0, height: 1},

@@ -66,35 +66,6 @@ const Status = ({route, navigation}) => {
         source={{uri: storyImage}}
         style={{position: 'absolute', width: '100%', height: 600}}
       />
-      {/* <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          marginVertical: 10,
-          width: '100%',
-        }}>
-        <TextInput
-          placeholder="send message"
-          placeholderTextColor="white"
-          style={{
-            borderColor: 'white',
-            borderRadius: 25,
-            width: '85%',
-            height: 50,
-            paddingLeft: 20,
-            borderWidth: 1,
-            fontSize: 20,
-            color: 'white',
-          }}
-        />
-        <Pressable onPress={() => navigation.goBack()}>
-          <Feather name="navigation" style={{fontSize: 30, color: 'white'}} />
-        </Pressable>
-      </View> */}
     </View>
   );
 };

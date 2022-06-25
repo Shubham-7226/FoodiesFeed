@@ -18,11 +18,9 @@ export default function PostItem({items}) {
   const navigation = useNavigation();
   const [item, setItem] = useState(items);
   const [like, setLike] = useState(!!item?.PostLikes?.length);
-  // console.log('like in postItem', like);
   const [comment, setComment] = useState('');
   let token = useSelector(state => state.user.user.token);
   const [userToken, setUserToken] = useState(token);
-  // console.log('in postItem After userSelectorr', userToken);
   const likeHandler = async postId => {
     let url = `${LIKE_POST}${postId}/like`;
     console.log(url);
@@ -39,8 +37,6 @@ export default function PostItem({items}) {
       .catch(err => {
         console.log(err.response.data);
       });
-
-    // console.log('in like after api call of posts', data?.data?.data);
   };
   const addComment = async postId => {
     let url = `${ADD_COMMENT}${postId}/comments`;
@@ -226,24 +222,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   postImageStyles: {height: 400, width: '98%'},
-  //   itemContainerWrapper: {
-  //     margin: 12,
-  //     padding: 10,
-  //     borderRadius: 7,
-  //     borderColor: COLORS.primary,
-  //     borderWidth: 0.8,
-  //     // elevation: 10,
-  //     // shadowOffset: {width: 0, height: 1},
-  //     // shadowColor: '#333',
-  //     // shadowOpacity: 0.9,
-  //     // shadowRadius: 1,
-  //     // backgroundColor: 'white',
-  //     // elevation: 2,
-  //     // shadowColor: '#000',
-  //     // shadowOffset: {width: 0, height: 1},
-  //     // shadowOpacity: 0.5,
-  //     // shadowRadius: 1,
-  //   },
+
   profileContainerWrapper: {flexDirection: 'row', alignItems: 'center'},
   profileInCommentStyle: {
     flexDirection: 'row',
@@ -256,11 +235,9 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   itemContainer: {
-    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    // backgroundColor: 'red',
   },
   textContainer: {
     marginLeft: 10,

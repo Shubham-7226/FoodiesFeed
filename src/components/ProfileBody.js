@@ -8,7 +8,6 @@ import Modal from 'react-native-modal';
 import Logout from '../screens/Profile/Logout';
 import {FOLLOW_USER, GET_USER_FOLLOWERS, UNFOLLOW_USER} from '../utils/url';
 import {GET_USER_FOLLOWINGS} from '../utils/url';
-// import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -25,27 +24,19 @@ export const ProfileBody = ({
   // route,
 }) => {
   const navigation = useNavigation();
-  // const {updatedImage} = route?.params;
-  // const [image, setImage] = useState();
   const [isModalVisible, setModalVisible] = useState(false);
   const [userFollowers, setUserFollowers] = useState([]);
   const [userFollowings, setUserFollowings] = useState([]);
   let token = useSelector(state => state.user.user.token);
 
-  // useEffect(() => {}, [navigation]);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getUserFollowers();
       getUserFollowings();
     });
-
-    // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, []);
 
-  // const setData = data => {
-  //   setImage(data);
-  // };
   function ButtonEventHandler() {
     modalVisible();
     setModalVisible(!isModalVisible);
@@ -57,13 +48,10 @@ export const ProfileBody = ({
       .get(followUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data',
         },
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);
-        // setErrorMessage(err.response.data.errorMessage);
-        // setIsLoading(false);
       });
     console.log(
       'in profile after api call of followers',
@@ -79,13 +67,10 @@ export const ProfileBody = ({
       .get(followingUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data',
         },
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);
-        // setErrorMessage(err.response.data.errorMessage);
-        // setIsLoading(false);
       });
     console.log(
       'in profile after api call of followings',
@@ -93,8 +78,6 @@ export const ProfileBody = ({
     );
     let following = resData?.data?.data.following;
     setUserFollowings(following);
-    // console.log('-----------------------in useEffect of profile', user);
-    // dispatch(uploadImage({image: user?.image}));
   };
 
   return (
@@ -132,7 +115,6 @@ export const ProfileBody = ({
           style={{
             alignItems: 'center',
           }}>
-          {/* updatedImage ? updatedImage : */}
           <Image
             key={Date.now()}
             source={{uri: `${profileImage}?${new Date().getMinutes()}`}}
@@ -187,7 +169,6 @@ export const ProfileButtons = ({
   userId,
 }) => {
   const navigation = useNavigation();
-  // console.log('user in profile button', userDetail);
 
   const status = useSelector(state => {
     return {
@@ -202,8 +183,6 @@ export const ProfileButtons = ({
   console.log('in profilebody status follow', follow);
   console.log('in profilebody status followBack', followBack);
 
-  // console.log('checking follow', follow);
-  // console.log('checking followBack', followBack);
   const setUserFollow = async () => {
     let url = `${FOLLOW_USER}${userId}`;
     console.log('in follow of profilebody ', url);
@@ -215,7 +194,6 @@ export const ProfileButtons = ({
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // 'Content-Type': 'multipart/form-data',
           },
         },
       )
@@ -236,14 +214,11 @@ export const ProfileButtons = ({
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // 'Content-Type': 'multipart/form-data',
           },
         },
       )
       .catch(err => {
         console.log(err.response.data);
-        // setErrorMessage(err.response.data.errorMessage);
-        // setIsLoading(false);
       });
     console.log(
       'in unfollow after api call of userunfollow++++',
@@ -308,7 +283,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    // borderColor: '#cccc',
     borderBottomWidth: 1,
     borderRadius: 5,
     padding: 8,
@@ -316,8 +290,6 @@ const styles = StyleSheet.create({
   accountNameContainerOtherUser: {
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'space-between',
-    // borderColor: '#cccc',
     borderBottomWidth: 1,
     borderRadius: 5,
     padding: 8,

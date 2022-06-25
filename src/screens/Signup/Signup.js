@@ -13,7 +13,6 @@ import axios from 'axios';
 import {registerUser} from '../../store/actions';
 import {useSelector, useDispatch} from 'react-redux';
 import COLORS from '../../constants/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {REGISTER} from '../../utils/url';
 
 export default function Signup({navigation}) {
@@ -24,23 +23,10 @@ export default function Signup({navigation}) {
     dob: '',
     password: '',
   });
-  // const [userToken, setUserToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  // const storeTokenTOAsync = async token => {
-  //   try {
-  //     console.log('storing token in async', token);
-  //     const jsonValue = JSON.stringify(token);
-  //     await AsyncStorage.setItem('userToken', jsonValue);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
 
-  // const userDetail = useSelector(state => state.user.user);
-  // console.log('After userSelector', userDetail);
-  //console.log(registerd);
   const inputHandler = (inputidentifier, enteredData) => {
     setInput(input => {
       return {
@@ -76,7 +62,6 @@ export default function Signup({navigation}) {
         setErrorMessage('');
         let userToken = res.data.data.authenticate;
         console.log('user token before dispatch', userToken);
-        // storeTokenTOAsync(userToken);
         setIsLoading(false);
         let userImage = res.data.data.user.image;
         let userId = res.data.data.user.id;
@@ -84,14 +69,12 @@ export default function Signup({navigation}) {
       })
       .catch(err => {
         console.log(err.response.data.errorMessage);
-        setErrorMessage(err.response.data.errorMessage);
+        setErrorMessage('enter valid details');
         setIsLoading(false);
       });
-
-    // await AsyncStorage.setItem('token', userToken);
   };
   return (
-    <KeyboardAvoidingView behavior={'heght'}>
+    <KeyboardAvoidingView>
       <ScrollView style={styles.scrollViewSignup}>
         <View style={[styles.container]}>
           <View
@@ -99,7 +82,6 @@ export default function Signup({navigation}) {
               position: 'absolute',
               top: '45%',
               left: '45%',
-              // backgroundColor: 'red',
             }}>
             {isLoading ? (
               <ActivityIndicator size="large" color="orange" />
@@ -152,9 +134,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     backgroundColor: 'white',
     justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: 'white',
-    // borderWidth: 1,
   },
   buttonContainer: {
     marginVertical: 12,
@@ -164,12 +143,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   scrollViewSignup: {
-    // height: 300,
-    // paddingVertical: 40,
     height: '100%',
-    // flex: 1,
 
-    // marginVertical: 25,
     backgroundColor: 'white',
   },
 });
