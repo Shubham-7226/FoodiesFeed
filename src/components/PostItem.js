@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
@@ -18,6 +19,8 @@ export default function PostItem({items}) {
   const navigation = useNavigation();
   const [item, setItem] = useState(items);
   const [like, setLike] = useState(!!item?.PostLikes?.length);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [comment, setComment] = useState('');
   let token = useSelector(state => state.user.user.token);
   const [userToken, setUserToken] = useState(token);
@@ -35,7 +38,7 @@ export default function PostItem({items}) {
         },
       )
       .catch(err => {
-        console.log(err.response.data);
+        console.log(err?.response?.data);
       });
   };
   const addComment = async postId => {
@@ -73,13 +76,20 @@ export default function PostItem({items}) {
         },
       )
       .catch(err => {
-        console.log(err.response.data);
+        console.log(err?.response?.data);
       });
 
     console.log('in like after api call of posts', data?.data?.data);
   };
   return (
     <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator
+          size={'large'}
+          color="orange"
+          style={styles.activityIndicatorStyle}
+        />
+      ) : null}
       <View style={styles.itemContainer}>
         <Image
           source={{
@@ -97,6 +107,12 @@ export default function PostItem({items}) {
         <Image
           source={{
             uri: item?.image,
+          }}
+          onLoadStart={() => {
+            setIsLoading(true);
+          }}
+          onLoadEnd={() => {
+            setIsLoading(false);
           }}
           style={styles.postImageStyles}
           resizeMode="cover"
@@ -241,6 +257,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginLeft: 10,
+  },
+  activityIndicatorStyle: {
+    position: 'absolute',
+    top: '45%',
+    left: '45%',
   },
   commentTextStyle: {opacity: 0.4, paddingVertical: 2},
   userProfileImageStyles: {height: 50, width: 50, borderRadius: 50},

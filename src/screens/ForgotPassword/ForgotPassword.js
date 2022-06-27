@@ -32,7 +32,7 @@ export default function ForgotPassword({navigation}) {
       })
       .catch(err => {
         console.log(err.response.data);
-        setErrorMessage(err.response.data.errorMessage);
+        setErrorMessage(err?.response?.data?.errorMessage);
         setIsLoading(false);
       });
     console.log('url in onSUbmit of reset password', url);

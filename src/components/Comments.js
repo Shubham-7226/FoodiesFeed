@@ -26,7 +26,7 @@ export default function Comments({route}) {
         },
       })
       .catch(err => {
-        console.log(err.response.data);
+        console.log(err?.response?.data);
       });
     console.log(
       'in comments after api call of comments',

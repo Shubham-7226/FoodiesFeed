@@ -1,18 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {View, TextInput, StyleSheet, Pressable} from 'react-native';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import {SEARCH_USER} from '../utils/url';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
+import DelayInput from 'react-native-debounce-input';
 
 const SearchBox = ({setSearchedData}) => {
   const navigation = useNavigation();
   const userToken = useSelector(state => state.user.user.token);
+  const inputRef = createRef();
 
   const [searchText, setSearchText] = useState('');
   let responseData;
-  const getSearchUser = async () => {
+  const getSearchUser = async searchText => {
     console.log(SEARCH_USER);
     data = await axios
       .get(`${SEARCH_USER}${searchText}`, {
@@ -21,7 +23,7 @@ const SearchBox = ({setSearchedData}) => {
         },
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
       });
     console.log('in searchBox after api call', data?.data?.data.users);
     responseData = data?.data?.data.users;
@@ -31,13 +33,21 @@ const SearchBox = ({setSearchedData}) => {
 
   return (
     <View style={styles.searchContainer}>
-      <TextInput
+      {/* <TextInput
         placeholder="Search"
         placeholderTextColor="#909090"
         style={styles.textInputContainer}
         returnKeyType="done"
         value={searchText}
         onChangeText={text => setSearchText(text)}
+      /> */}
+      <DelayInput
+        value={searchText}
+        minLength={3}
+        inputRef={inputRef}
+        onChangeText={text => getSearchUser(text)}
+        delayTimeout={500}
+        style={styles.textInputContainer}
       />
       <Pressable style={styles.iconContainer} onPress={getSearchUser}>
         <Ionic name="search" style={styles.iconStyles} />

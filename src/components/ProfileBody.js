@@ -10,6 +10,7 @@ import {FOLLOW_USER, GET_USER_FOLLOWERS, UNFOLLOW_USER} from '../utils/url';
 import {GET_USER_FOLLOWINGS} from '../utils/url';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
+import {getOtherUser} from '../store/actions';
 
 export const ProfileBody = ({
   id,
@@ -51,7 +52,7 @@ export const ProfileBody = ({
         },
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
       });
     console.log(
       'in profile after api call of followers',
@@ -70,7 +71,7 @@ export const ProfileBody = ({
         },
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
       });
     console.log(
       'in profile after api call of followings',
@@ -169,6 +170,7 @@ export const ProfileButtons = ({
   userId,
 }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const status = useSelector(state => {
     return {
@@ -198,8 +200,9 @@ export const ProfileButtons = ({
         },
       )
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
       });
+    dispatch(getOtherUser(1, followBack));
 
     console.log('in follow after api call of userfollow++++', data?.data?.data);
   };
@@ -220,6 +223,7 @@ export const ProfileButtons = ({
       .catch(err => {
         console.log(err.response.data);
       });
+    dispatch(getOtherUser(0, followBack));
     console.log(
       'in unfollow after api call of userunfollow++++',
       data?.data?.data,

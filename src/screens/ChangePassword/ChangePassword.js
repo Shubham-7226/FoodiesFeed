@@ -67,7 +67,7 @@ export default function ChangePassword({navigation}) {
         })
         .catch(err => {
           console.log(err.response.data);
-          let message = err.response.data.errorMessage;
+          let message = err?.response?.data?.errorMessage;
           setIsLoading(false);
           setErrorMessage(message);
         });

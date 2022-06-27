@@ -55,7 +55,7 @@ const Stories = () => {
         },
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
       });
 
     console.log('in Story after api call', data?.data?.data?.story);
@@ -74,7 +74,7 @@ const Stories = () => {
         },
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
       });
 
     console.log('in self Story after api call', data?.data?.data);
@@ -191,8 +191,8 @@ const Stories = () => {
           }}
         />
       }>
-      {selfStory.length !== 0 ? (
-        selfStory?.map((data, index) => {
+      {selfStory !== undefined && selfStory.length !== 0 ? (
+        selfStory.map((data, index) => {
           return (
             <Pressable
               key={index}

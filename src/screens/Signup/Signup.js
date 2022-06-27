@@ -68,7 +68,7 @@ export default function Signup({navigation}) {
         dispatch(registerUser({input, userToken, userImage, userId}));
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
         setErrorMessage('enter valid details');
         setIsLoading(false);
       });
@@ -96,7 +96,7 @@ export default function Signup({navigation}) {
           />
           <CustomTextInput
             label="Name"
-            placeholder="Username"
+            placeholder="Fullname"
             onChangeText={inputHandler.bind(this, 'name')}
           />
           <CustomTextInput

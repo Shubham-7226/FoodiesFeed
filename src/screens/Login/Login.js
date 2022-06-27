@@ -59,8 +59,8 @@ export default function Login({navigation}) {
         dispatch(loginUser({input, userToken, userImage, userId}));
       })
       .catch(err => {
-        console.log(err.response.data.errorMessage);
-        setErrorMessage(err.response.data.errorMessage);
+        console.log(err?.response?.data?.errorMessage);
+        setErrorMessage(err?.response?.data?.errorMessage);
         setIsLoading(false);
       });
   };
