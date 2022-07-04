@@ -4,13 +4,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Keychain from 'react-native-keychain';
 import {useSelector, useDispatch} from 'react-redux';
 import {setUserToken} from '../store/actions/index';
 
 export default function Navigation() {
   const dispatch = useDispatch();
-  // const [isUserLoggedin, setIsUserLoggedin] = useState(null);
   let isUserLoggedin;
   let tokenfromAsync = useSelector(state => {
     return state.user.user.token;
@@ -19,9 +17,6 @@ export default function Navigation() {
   useEffect(() => {
     if (tokenfromAsync === null) getTokenFromAsync();
   }, [tokenfromAsync]);
-  // if (tokenfromAsync !== null) {
-  //   setIsUserLoggedin(tokenfromAsync);
-  // }
   const getTokenFromAsync = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('userToken');

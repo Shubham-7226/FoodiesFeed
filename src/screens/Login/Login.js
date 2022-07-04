@@ -5,6 +5,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import CustomTextInput from '../../components/CustomTextInput';
@@ -60,6 +61,17 @@ export default function Login({navigation}) {
       })
       .catch(err => {
         console.log(err?.response?.data?.errorMessage);
+        Alert.alert(
+          'Incorrect Login credentials',
+          'Please check your credentials and try again',
+          [
+            {
+              text: 'OK',
+              onPress: () =>
+                console.log('OK Pressed on alert of both pass do not match'),
+            },
+          ],
+        );
         setErrorMessage(err?.response?.data?.errorMessage);
         setIsLoading(false);
       });

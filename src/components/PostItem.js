@@ -20,6 +20,7 @@ export default function PostItem({items}) {
   const [item, setItem] = useState(items);
   const [like, setLike] = useState(!!item?.PostLikes?.length);
   const [isLoading, setIsLoading] = useState(false);
+  let userImage = useSelector(state => state.user.user.image);
 
   const [comment, setComment] = useState('');
   let token = useSelector(state => state.user.user.token);
@@ -164,15 +165,19 @@ export default function PostItem({items}) {
           {like ? `you and ${item?.likeCount} ` : `${item?.likeCount} `}
           others
         </Text>
-
-        <Text style={styles.commentTextStyle}>
-          View all {item?.commentCount} comments
-        </Text>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Comments', {postId: item?.id});
+          }}>
+          <Text style={styles.commentTextStyle}>
+            View all {item?.commentCount} comments
+          </Text>
+        </Pressable>
         <View style={styles.profileInCommentStyle}>
           <View style={styles.profileContainerWrapper}>
             <Image
               source={{
-                uri: item?.User.image,
+                uri: userImage ? userImage : item?.User.image,
               }}
               style={styles.profileImageInCommentStyle}
             />

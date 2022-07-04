@@ -41,8 +41,8 @@ const Profile = ({navigation}) => {
   }, [userDetail]);
 
   return (
-    <View style={{width: '100%', height: '100%', backgroundColor: 'white'}}>
-      <View style={{width: '100%', padding: 10}}>
+    <View style={styles.container}>
+      <View style={styles.secondaryContainer}>
         <ProfileBody
           id={1}
           name={user?.name}
@@ -71,27 +71,10 @@ const Profile = ({navigation}) => {
           setModalVisible(false);
         }}>
         <View style={styles.modalContainer}>
-          <View
-            style={{
-              height: 3,
-              width: '20%',
-              marginVertical: 12,
-              backgroundColor: '#ccc',
-              alignSelf: 'center',
-            }}
-          />
+          <View style={styles.secondaryModalContainer} />
           {/* <Text>Logout</Text> */}
-          <View
-            style={{
-              justifyContent: 'center',
-              height: '80%',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                // alignSelf: 'center',
-              }}>
+          <View style={styles.buttonWrapperContainer}>
+            <View style={styles.buttonWrapper}>
               <CustomButton
                 title="Cancel"
                 onPress={() => {
@@ -118,6 +101,24 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
   },
+  buttonWrapperContainer: {
+    justifyContent: 'center',
+    height: '80%',
+  },
+  buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    // alignSelf: 'center',
+  },
+  secondaryModalContainer: {
+    height: 3,
+    width: '20%',
+    marginVertical: 12,
+    backgroundColor: '#ccc',
+    alignSelf: 'center',
+  },
+  secondaryContainer: {width: '100%', padding: 10},
+  container: {width: '100%', height: '100%', backgroundColor: 'white'},
 });
 
 export default Profile;

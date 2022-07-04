@@ -9,12 +9,14 @@ export default function CustomTextInput({
   secureTextEntry,
   numberOfLines,
   customStyle,
+  keyboardType,
+  onEndEditing,
+  maxLength,
+  onKeyPress,
 }) {
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 16, fontWeight: 'bold', marginBottom: 16}}>
-        {label}
-      </Text>
+      <Text style={styles.labelStyle}>{label}</Text>
       <TextInput
         autoCapitalize="none"
         value={value}
@@ -22,6 +24,10 @@ export default function CustomTextInput({
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         numberOfLines={numberOfLines}
+        keyboardType={keyboardType}
+        onEndEditing={onEndEditing}
+        maxLength={maxLength}
+        onKeyPress={onKeyPress}
         style={[styles.input, customStyle]}
       />
     </View>
@@ -37,4 +43,5 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingHorizontal: 16,
   },
+  labelStyle: {fontSize: 16, fontWeight: 'bold', marginBottom: 16},
 });

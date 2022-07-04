@@ -168,7 +168,7 @@ export default function DisplayImage({route, navigation}) {
               <Icon
                 name="ios-chatbubble-outline"
                 size={30}
-                style={{marginLeft: 10}}
+                style={styles.commentIconStyle}
                 color={COLORS.primary}
               />
             </Pressable>
@@ -271,4 +271,5 @@ const styles = StyleSheet.create({
   },
   commentTextStyle: {opacity: 0.4, paddingVertical: 2},
   userProfileImageStyles: {height: 50, width: 50, borderRadius: 50},
+  commentIconStyle: {marginLeft: 10},
 });

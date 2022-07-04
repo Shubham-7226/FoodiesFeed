@@ -1,4 +1,4 @@
-export const API_URL = 'https://7e1f-103-240-35-190.ngrok.io';
+export const API_URL = 'https://c412-103-240-35-190.ngrok.io';
 // export const API_URL = 'http://44.199.141.123:4000';
 
 export const REGISTER = `${API_URL}/users`;

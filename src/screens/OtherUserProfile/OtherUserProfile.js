@@ -38,8 +38,8 @@ const OtherUserProfile = ({route}) => {
   };
 
   return (
-    <View style={{width: '100%', height: '100%', backgroundColor: 'white'}}>
-      <View style={{width: '100%', padding: 10}}>
+    <View style={styles.container}>
+      <View style={styles.secondaryContainer}>
         <ProfileBody
           id={0}
           name={user?.name}
@@ -51,7 +51,7 @@ const OtherUserProfile = ({route}) => {
           userId={id}
         />
 
-        {console.log('@follow', user?.follows)}
+        {/* {console.log('@follow', user?.follows)} */}
         <ProfileButtons
           id={1}
           name={user?.name}
@@ -77,6 +77,8 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
   },
+  secondaryContainer: {width: '100%', padding: 10},
+  container: {width: '100%', height: '100%', backgroundColor: 'white'},
 });
 
 export default OtherUserProfile;

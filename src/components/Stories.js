@@ -218,23 +218,10 @@ const Stories = () => {
                           ? userData?.image
                           : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
                     }}
-                    style={{
-                      resizeMode: 'cover',
-                      width: '90%',
-                      height: '90%',
-                      borderRadius: 100,
-                      backgroundColor: 'orange',
-                    }}
+                    style={styles.userStoryImageStyles}
                   />
                 </View>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontSize: 12,
-                    color: 'black',
-                  }}>
-                  {'You'}
-                </Text>
+                <Text style={styles.selfStoryTextStyle}>{'You'}</Text>
               </View>
             </Pressable>
           );
@@ -249,12 +236,7 @@ const Stories = () => {
                 }}>
                 <Entypo
                   name="circle-with-plus"
-                  style={{
-                    fontSize: 20,
-                    color: COLORS.primary,
-                    backgroundColor: 'white',
-                    borderRadius: 100,
-                  }}
+                  style={styles.createStoryIconStyles}
                 />
               </Pressable>
             </View>
@@ -266,23 +248,10 @@ const Stories = () => {
                       ? userData?.image
                       : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
                 }}
-                style={{
-                  resizeMode: 'cover',
-                  width: '90%',
-                  height: '90%',
-                  borderRadius: 100,
-                  backgroundColor: 'orange',
-                }}
+                style={styles.defaultStoryImageStyles}
               />
             </View>
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 12,
-                color: 'black',
-              }}>
-              {'You'}
-            </Text>
+            <Text style={styles.defaultStoryTextStyle}>{'You'}</Text>
           </View>
         </Pressable>
       )}
@@ -314,21 +283,10 @@ const Stories = () => {
                 }>
                 <Image
                   source={{uri: data.image}}
-                  style={{
-                    resizeMode: 'cover',
-                    width: '90%',
-                    height: '90%',
-                    borderRadius: 100,
-                    backgroundColor: 'orange',
-                  }}
+                  style={styles.userStoryImageContainer}
                 />
               </View>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 12,
-                  color: 'black',
-                }}>
+              <Text style={styles.userStoryTextContainer}>
                 {data?.user?.userName}
               </Text>
             </View>
@@ -341,10 +299,7 @@ const Stories = () => {
         isVisible={isModalVisible}
         onSwipeComplete={() => setModalVisible(false)}
         swipeDirection="down"
-        style={{
-          marginTop: '128%',
-          height: '30%',
-        }}>
+        style={styles.modalStyles}>
         <View style={{flex: 1}}>
           <CustomButton
             title="Take Photo"
@@ -377,16 +332,51 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     maxHeight: 125,
   },
+  modalStyles: {
+    marginTop: '128%',
+    height: '30%',
+  },
+  userStoryTextContainer: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: 'black',
+  },
+  userStoryImageContainer: {
+    resizeMode: 'cover',
+    width: '90%',
+    height: '90%',
+    borderRadius: 100,
+    backgroundColor: 'orange',
+  },
+  defaultStoryImageStyles: {
+    resizeMode: 'cover',
+    width: '90%',
+    height: '90%',
+    borderRadius: 100,
+    backgroundColor: 'orange',
+  },
   createStoryContainer: {
     flexDirection: 'column',
     paddingHorizontal: 8,
     position: 'relative',
+  },
+  defaultStoryTextStyle: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: 'black',
   },
   createStoryIconContainer: {
     position: 'absolute',
     bottom: 15,
     right: 10,
     zIndex: 1,
+  },
+  userStoryImageStyles: {
+    resizeMode: 'cover',
+    width: '90%',
+    height: '90%',
+    borderRadius: 100,
+    backgroundColor: 'orange',
   },
   UserStoryContainer: {
     width: 68,
@@ -397,6 +387,17 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  createStoryIconStyles: {
+    fontSize: 20,
+    color: COLORS.primary,
+    backgroundColor: 'white',
+    borderRadius: 100,
+  },
+  selfStoryTextStyle: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: 'black',
   },
   SelfNoneUserStoryContainer: {
     width: 68,

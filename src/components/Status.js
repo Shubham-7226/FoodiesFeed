@@ -55,17 +55,11 @@ const Status = ({route, navigation}) => {
         <View style={styles.statusHaderContainer}>
           <Text style={styles.inStatusTextContainer}>{name}</Text>
           <Pressable onPress={() => navigation.goBack()}>
-            <Ionic
-              name="close"
-              style={{fontSize: 20, color: 'white', opacity: 0.8}}
-            />
+            <Ionic name="close" style={styles.closeIconStyle} />
           </Pressable>
         </View>
       </View>
-      <Image
-        source={{uri: storyImage}}
-        style={{position: 'absolute', width: '100%', height: 600}}
-      />
+      <Image source={{uri: storyImage}} style={styles.storyImageStyles} />
     </View>
   );
 };
@@ -78,6 +72,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  storyImageStyles: {position: 'absolute', width: '100%', height: 600},
+  closeIconStyle: {fontSize: 20, color: 'white', opacity: 0.8},
   statusInnerContainer: {
     height: 3,
     width: '95%',

@@ -149,28 +149,11 @@ export default function AddPost({navigation}) {
           </ImageBackground>
         </Pressable>
       )}
-      <View
-        style={{
-          flexDirection: 'row',
-          borderWidth: 1,
-          borderColor: '#CDCDCD',
-          elevation: 3,
-        }}>
-        <Text
-          style={{
-            fontSize: 16,
-            marginTop: 8,
-          }}>
-          Captions:
-        </Text>
+      <View style={styles.captionStylesContainer}>
+        <Text style={styles.captionTextStyles}>Captions:</Text>
 
         <TextInput
-          style={{
-            textAlignVertical: 'top',
-            marginLeft: 8,
-            width: '80%',
-            fontSize: 16,
-          }}
+          style={styles.captionTextInputStyles}
           multiline={true}
           numberOfLines={5}
           placeholder="Add feed text here..."
@@ -239,6 +222,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  captionTextStyles: {
+    fontSize: 16,
+    marginTop: 8,
+  },
+  captionTextInputStyles: {
+    textAlignVertical: 'top',
+    marginLeft: 8,
+    width: '80%',
+    fontSize: 16,
+  },
+  captionStylesContainer: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#CDCDCD',
+    elevation: 3,
   },
   imagePostStyle: {
     height: 300,

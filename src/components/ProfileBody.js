@@ -29,6 +29,7 @@ export const ProfileBody = ({
   const [userFollowers, setUserFollowers] = useState([]);
   const [userFollowings, setUserFollowings] = useState([]);
   let token = useSelector(state => state.user.user.token);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -99,11 +100,12 @@ export const ProfileBody = ({
             <Pressable
               onPress={() => {
                 navigation.pop();
+                // dispatch(getOtherUser(0, 0));
               }}>
               <Ionic
                 name="arrow-back"
                 color={'black'}
-                style={{fontSize: 30, marginHorizontal: 8}}
+                style={styles.backArrowStyles}
               />
             </Pressable>
             <Text style={styles.accountNameStyles}>{accountName}</Text>
@@ -130,7 +132,7 @@ export const ProfileBody = ({
           </Text>
         </View>
         <View style={{alignItems: 'center'}}>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>{post}</Text>
+          <Text style={styles.followCountContainerStyles}>{post}</Text>
           <Text>Posts</Text>
         </View>
         <Pressable
@@ -141,7 +143,7 @@ export const ProfileBody = ({
             });
           }}>
           <View style={{alignItems: 'center'}}>
-            <Text style={{fontWeight: 'bold', fontSize: 18}}>{followers}</Text>
+            <Text style={styles.followCountContainerStyles}>{followers}</Text>
             <Text>Followers</Text>
           </View>
         </Pressable>
@@ -153,7 +155,7 @@ export const ProfileBody = ({
             });
           }}>
           <View style={{alignItems: 'center'}}>
-            <Text style={{fontWeight: 'bold', fontSize: 18}}>{following}</Text>
+            <Text style={styles.followCountContainerStyles}>{following}</Text>
             <Text>Following</Text>
           </View>
         </Pressable>
@@ -327,7 +329,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.primary,
   },
-
+  followCountContainerStyles: {fontWeight: 'bold', fontSize: 18},
   editProfileButtonContainer: {
     width: '100%',
     height: 35,
@@ -350,4 +352,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     paddingVertical: 5,
   },
+  backArrowStyles: {fontSize: 30, marginHorizontal: 8},
 });

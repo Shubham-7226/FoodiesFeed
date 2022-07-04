@@ -109,7 +109,7 @@ const EditProfile = ({route, navigation}) => {
 
       <View style={styles.headerContainer}>
         <Pressable onPress={() => navigation.goBack()}>
-          <Ionic name="close-outline" style={{fontSize: 35}} />
+          <Ionic name="close-outline" style={styles.closeIconStyle} />
         </Pressable>
         <Text style={styles.editProfileTextStyle}>Edit Profile</Text>
         <Pressable
@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
     padding: 10,
     color: COLORS.primary,
   },
+  closeIconStyle: {fontSize: 35},
 });
 
 export default EditProfile;
